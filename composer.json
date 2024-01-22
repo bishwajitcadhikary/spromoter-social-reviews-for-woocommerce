@@ -1,0 +1,19 @@
+{
+    "name": "bishwajit/spromoter-social-reviews-for-woocommerce",
+    "description": "SPromoter Social Reviews for WooCommerce helps you to collect and display reviews from your customers on your WooCommerce store.",
+    "type": "project",
+    "license": "GPL",
+    "autoload": {
+        "psr-4": {
+            "Bishwajit\\SpromoterSocialReviewsForWoocommerce\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bishwajit Adhikary",
+            "email": "bishwajitcadhikary@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
