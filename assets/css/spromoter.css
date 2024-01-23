@@ -1,8 +1,15 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
 @font-face {
     font-display: block;
     font-family: "bootstrap-icons";
     src: url("./../font/bootstrap-icons.woff2") format("woff2"),
-    url("./../font/bootstrap-icons.woff") format("woff");
+        url("./../font/bootstrap-icons.woff") format("woff");
 }
 
 .bi::before,
@@ -46,6 +53,22 @@
 
 .bi-upload::before {
     content: "\f603"
+}
+
+.bi-box-arrow-up::before {
+    content: "\f1c6"
+}
+
+.bi-floppy::before {
+    content: "\f7d8"
+}
+
+.bi-bag-check::before {
+    content: "\f171"
+}
+
+.bi-arrow-right::before {
+    content: "\f138"
 }
 
 /* spromoter styles */
@@ -268,7 +291,7 @@
     color: #8480ae;
 }
 
-.spromoter-ratings > i {
+.spromoter-ratings>i {
     margin: 0 2px;
 }
 
@@ -478,32 +501,32 @@ textarea.spromoter-form-input {
     justify-content: center;
 }
 
-.spromoter-rating-wrap input[type="radio"]:checked ~ input + label {
+.spromoter-rating-wrap input[type="radio"]:checked~input+label {
     background: none;
     color: #8480ae;
 }
 
-.spromoter-rating-wrap input + label {
+.spromoter-rating-wrap input+label {
     background: #fff;
     color: #ffc107;
     margin: 0 0 1em 0;
 }
 
-.spromoter-rating-wrap input + label:first-of-type {
+.spromoter-rating-wrap input+label:first-of-type {
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
 }
 
-.spromoter-rating-wrap input:checked + label {
+.spromoter-rating-wrap input:checked+label {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
 }
 
-.spromoter-form-file > input[type='file'] {
+.spromoter-form-file>input[type='file'] {
     display: none
 }
 
-.spromoter-form-file > label {
+.spromoter-form-file>label {
     font-size: 1rem;
     cursor: pointer;
     outline: 0;
@@ -532,17 +555,17 @@ textarea.spromoter-form-input {
     color: #8480ae;
 }
 
-.spromoter-form-file > label > i {
+.spromoter-form-file>label>i {
     padding-right: 0.5rem;
     color: #0d6efd;
 }
 
-.spromoter-form-file > label > span {
+.spromoter-form-file>label>span {
     font-size: 12px;
     margin-left: 0.25rem;
 }
 
-.spromoter-form-file > label:hover {
+.spromoter-form-file>label:hover {
     background-color: #EAEFFF;
 }
 
@@ -677,11 +700,27 @@ textarea.spromoter-form-input {
 
 .spromoter-brand {
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
-.spromoter-brand > img {
-    max-height: 2rem;
+.spromoter-brand>img {
+    max-height: 1.75rem;
+}
+
+.spromoter-settings-card-header h2 {
+    margin-bottom: 0 !important;
+}
+
+.spromoter-settings-card-header {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: end;
+        -ms-flex-align: end;
+            align-items: flex-end;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
 }
 
 .spromoter-settings-card .spromoter-form-input {
@@ -755,7 +794,7 @@ textarea.spromoter-form-input {
     margin-bottom: 1rem;
 }
 
-#spromotertotalReviewsStars > i {
+#spromotertotalReviewsStars>i {
     color: #ffc107;
     margin-right: .25rem;
 }
@@ -803,7 +842,7 @@ textarea.spromoter-form-input {
     align-items: center;
 }
 
-.spromoter-filter-form > div {
+.spromoter-filter-form>div {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 33.33333%;
     flex: 0 0 33.33333%;
@@ -812,7 +851,7 @@ textarea.spromoter-form-input {
     padding-left: 1rem;
 }
 
-.spromoter-filter-form > div:first-child {
+.spromoter-filter-form>div:first-child {
     padding-left: 0;
 }
 
@@ -940,7 +979,7 @@ textarea.spromoter-form-input {
     justify-content: center;
 }
 
-.spromoter-success-message > svg {
+.spromoter-success-message>svg {
     margin-right: .4rem;
 }
 
@@ -954,7 +993,7 @@ textarea.spromoter-form-input {
         flex-wrap: wrap;
     }
 
-    .spromoter-filter-form > div {
+    .spromoter-filter-form>div {
         -webkit-box-flex: 0;
         -ms-flex: 0 0 100%;
         flex: 0 0 100%;
@@ -1153,7 +1192,7 @@ body.lb-disable-scrolling {
     z-index: 10
 }
 
-.lb-container > .nav {
+.lb-container>.nav {
     left: 0
 }
 
@@ -1263,7 +1302,8 @@ body.lb-disable-scrolling {
     background-size: cover;
     position: absolute;
     top: -24px;
-    right: 24px;;
+    right: 24px;
+    ;
 }
 
 .lb-data .lb-close:hover {
@@ -1278,35 +1318,75 @@ body.lb-disable-scrolling {
 
 .spromoter-admin-footer {
     margin-top: 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     color: #8480ae;
     font-size: 14px;
-}
-
-.spromoter-submit-past-order-button{
-    border: none;
-    background: none;
-}
-
-.badge {
-    display: inline-block;
-    padding: .25em .4em;
-    font-weight: 700;
-    line-height: 1;
+    border-top: 1px solid #ebebeb;
+    padding-top: 1.5rem;
     text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: .25rem;
 }
 
-.badge-outline-primary {
-    color: #000000;
-    border: 1px solid #0d6efd;
+.spromoter-submit-past-order-button {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #1f0757;
+    font-weight: 700;
+    background-color: transparent;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-transition-duration: 400ms;
+         -o-transition-duration: 400ms;
+            transition-duration: 400ms;
 }
 
-.badge-outline-danger {
-    color: #000000;
-    border: 1px solid #dc3545;
+.spromoter-submit-past-order-button:hover,
+.spromoter-submit-past-order-button:focus {
+    color: #0d6efd;
+}
+
+.spromoter-submit-past-order-button>i {
+    padding-right: .5rem;
+    font-size: 1rem;
+}
+
+.spromoter-submit-past-order-button>i:last-child {
+    padding-right: 0;
+    padding-left: 0.5rem;
+}
+
+.spromoter-connected,
+.spromoter-disconnected {
+    border-radius: 6px;
+    padding: 3px 6px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    font-size: 12px;
+}
+
+.spromoter-connected {
+    background-color: #afffd5;
+    color: #085f34;
+    border: 1px solid #C4EBD2;
+}
+
+.spromoter-connected>svg,
+.spromoter-disconnected>svg {
+    padding-right: .25rem;
+}
+
+.spromoter-disconnected {
+    background-color: #fdf2f9;
+    color: #BF1A6D;
+    border: 1px solid #fce7f5;
 }

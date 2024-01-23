@@ -11,23 +11,36 @@
         <div class="spromoter-inner">
             <div class="spromoter-settings-card">
                 <div class="card-body">
-                    <!-- Logo -->
-                    <a href="#" class="spromoter-brand">
-                        <img src="<?php echo assets_path('images/logo.png'); ?>" alt="SPromoter">
-                    </a>
-                    <h2 class="mb-4">
-                        <?php esc_html_e('Configure your settings!', 'spromoter-reviews'); ?>
-                    </h2>
-
-                    <?php if (get_connection_status()){  ?>
-                        <div class="badge badge-outline-primary mb-3">
-                            <?php esc_html_e('Connected', 'spromoter-reviews'); ?>
+                    <div class="spromoter-settings-card-header mb-4">
+                        <div>
+                            <!-- Logo -->
+                            <a href="#" class="spromoter-brand">
+                                <img src="<?php echo assets_path('images/logo.png'); ?>" alt="SPromoter">
+                            </a>
+                            <h2>
+                                <?php esc_html_e('Configure your settings!', 'spromoter-reviews'); ?>
+                            </h2>
                         </div>
-                    <?php } else { ?>
-                        <div class="badge badge-outline-danger mb-3">
-                            <?php esc_html_e('Not Connected', 'spromoter-reviews'); ?>
+                        <div>
+                            <?php if (get_connection_status()){  ?>
+                                <div class="spromoter-connected">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
+                                    </svg>
+                                    <?php esc_html_e('Connected', 'spromoter-reviews'); ?>
+                                </div>
+                            <?php } else { ?>
+                                <div class="spromoter-disconnected">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                    </svg>
+                                    <?php esc_html_e('Not Connected', 'spromoter-reviews'); ?>
+                                </div>
+                            <?php } ?>
                         </div>
-                    <?php } ?>
+                    </div>
 
                     <form id="spromoterSettingsForm" method="POST">
                         <?= wp_nonce_field('spromoter_settings_form'); ?>
@@ -136,6 +149,7 @@
 
                     <div class="spromoter-button-group">
                         <button type="submit" class="spromoter-secondary-button" form="spromoterExportForm">
+                            <i class="bi bi-box-arrow-up"></i>
                             <?php esc_html_e('Export Reviews', 'spromoter-reviews'); ?>
                         </button>
                         <button type="submit" class="spromoter-button" form="spromoterSettingsForm">
@@ -145,11 +159,13 @@
 
                     <div class="spromoter-admin-footer">
                         <button type="submit" class="spromoter-submit-past-order-button" form="spromoterExportForm">
-                            <?php esc_html_e('Submit Past Orders', 'spromoter-reviews'); ?>
+                            <i class="bi bi-bag-check"></i>
+                            <?php esc_html_e('Submit Previous Orders', 'spromoter-reviews'); ?>
+                            <i class="bi bi-arrow-right"></i>
                         </button>
 
                         <a href="https://spromoter.com" target="_blank" class="spromoter-link">
-                            <?php esc_html_e('Powered by SPromoter', 'spromoter-reviews'); ?>
+                            <?php esc_html_e('Proudly powered by SPromoter', 'spromoter-reviews'); ?>
                         </a>
                     </div>
 
