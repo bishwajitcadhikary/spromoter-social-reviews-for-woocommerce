@@ -128,8 +128,13 @@ final class Plugin
     {
         include_once 'helper.php';
         include_once 'admin/api.php';
-        include_once 'admin/export.php';
-        include_once 'admin/settings.php';
+
+        if (is_admin()) {
+            include_once 'admin/export.php';
+            include_once 'admin/settings.php';
+        } else {
+            include_once 'frontend/widgets.php';
+        }
     }
 
     /**
