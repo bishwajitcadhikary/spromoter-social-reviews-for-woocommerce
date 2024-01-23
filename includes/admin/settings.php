@@ -15,10 +15,9 @@ class Settings
 
     public function add_admin_menus()
     {
-        $icon_url = '/wp-content/plugins/spromoter-social-reviews-for-woocommerce/assets/images/small-logo.jpg';
+        $icon_url = SP_PLUGIN_URL . '/assets/images/small-logo.jpg';
 
         add_menu_page('SPromoter', 'SPromoter', 'manage_options', 'spromoter', [$this, 'show_page'], $icon_url);
-//        add_submenu_page('spromoter', 'Settings', 'Settings', 'manage_options', 'spromoter-settings', [$this, 'settings_page']);
     }
 
     public function show_page()
@@ -36,7 +35,7 @@ class Settings
         }
 
         // Show Register Page
-        if (empty($settings['app_id']) && empty($settings['api_key']) || (isset($_GET['view']) && $_GET['view'] == 'register')) {
+        if (empty($settings['app_id']) && empty($settings['api_key']) && (isset($_GET['view']) && $_GET['view'] == 'register')) {
             if (!empty($_POST) && $this->register()) {
                 wp_redirect(admin_url('admin.php?page=spromoter'));
                 exit;
