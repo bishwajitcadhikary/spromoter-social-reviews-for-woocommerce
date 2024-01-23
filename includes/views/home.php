@@ -6,11 +6,15 @@
     <div class="spromoter-bg-shape">
         <img src="<?php echo assets_path('images/shape.png'); ?>" alt="SPromoter">
     </div>
-    <?php settings_errors('spromoter_messages'); ?>
     <div class="spromoter-wrapper">
         <div class="spromoter-inner">
             <div class="spromoter-settings-card">
                 <div class="card-body">
+
+                    <div class="spromoter-settings-messages">
+                        <?php settings_errors('spromoter_messages'); ?>
+                    </div>
+
                     <div class="spromoter-settings-card-header mb-4">
                         <div>
                             <!-- Logo -->
@@ -157,8 +161,15 @@
                         </button>
                     </div>
 
+
+
+                    <form method="POST" id="spromoterSubmitPastOrderForm">
+                        <?= wp_nonce_field('spromoter_submit_past_orders_form'); ?>
+                        <input type="hidden" name="submit_past_orders" value="true">
+                    </form>
+
                     <div class="spromoter-admin-footer">
-                        <button type="submit" class="spromoter-submit-past-order-button" form="spromoterExportForm">
+                        <button type="submit" class="spromoter-submit-past-order-button" form="spromoterSubmitPastOrderForm">
                             <i class="bi bi-bag-check"></i>
                             <?php esc_html_e('Submit Previous Orders', 'spromoter-reviews'); ?>
                             <i class="bi bi-arrow-right"></i>
@@ -168,7 +179,6 @@
                             <?php esc_html_e('Proudly powered by SPromoter', 'spromoter-reviews'); ?>
                         </a>
                     </div>
-
                 </div>
             </div>
         </div>

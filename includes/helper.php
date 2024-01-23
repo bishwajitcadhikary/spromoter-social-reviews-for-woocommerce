@@ -20,10 +20,11 @@ function settings($key = null)
         'app_id' => '',
         'api_key' => '',
         'order_status' => 'completed',
-        'review_show_in' => 'tab',
+        'review_show_in' => 'footer',
         'disable_native_review_system' => true,
         'show_bottom_line_widget' => true,
-        'debug_mode' => true
+        'debug_mode' => true,
+        'configured_at' => time(),
     ), $settings);
 
     if ($key){
@@ -45,11 +46,9 @@ function get_connection_status()
         return false;
     }
 
-    $api = new Api($settings['api_key']);
+    $api = new Api($settings['api_key'], $settings['app_id']);
 
-    $result = $api->sendRequest('check-credentials', 'POST', [
-        'app_id' => $settings['app_id'],
-    ]);
+    $result = $api->sendRequest('check-credentials', 'POST');
 
     return $result['status'];
 }

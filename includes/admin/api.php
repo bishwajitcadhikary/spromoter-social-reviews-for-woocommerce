@@ -16,20 +16,24 @@ class Api
         $this->app_id = $app_id;
     }
 
-    public function sendRequest( $endpoint, $method = 'GET', $body = array() ) {
+    public function sendRequest( $endpoint, $method = 'GET', $body = [] , $headers = []) {
         $ch = curl_init();
 
         if ($method == 'GET') {
             $endpoint .= '?' . http_build_query($body);
         }
 
-        curl_setopt($ch, CURLOPT_URL, $this->api_url . $endpoint);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        $headers = array_merge([
             'Authorization: Bearer ' . $this->api_key,
             'Content-Type: application/json',
-            'Accept: application/json'
-        ));
+            'Accept: application/json',
+            'X-App-ID: '. $this->app_id,
+        ], $headers);
+
+
+        curl_setopt($ch, CURLOPT_URL, $this->api_url . $endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         if (WP_DEBUG) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -41,6 +45,7 @@ class Api
         }
 
         $result = curl_exec($ch);
+
         if (curl_errno($ch)) {
             return false;
         }

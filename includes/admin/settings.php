@@ -7,8 +7,11 @@ namespace WovoSoft\SPromoter\Admin;
 
 class Settings
 {
+    protected $settings;
+
     public function __construct()
     {
+        $this->settings = settings();
         add_action('admin_menu', [$this, 'add_admin_menus']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
     }
@@ -22,9 +25,8 @@ class Settings
 
     public function show_page()
     {
-        $settings = settings();
         // Show Login Page
-        if (empty($settings['app_id']) && empty($settings['api_key']) && isset($_GET['view']) && $_GET['view'] == 'login') {
+        if (empty($this->settings['app_id']) && empty($this->settings['api_key']) && isset($_GET['view']) && $_GET['view'] == 'login') {
             if (!empty($_POST) && $this->login()) {
                 wp_redirect(admin_url('admin.php?page=spromoter'));
                 exit;
@@ -35,7 +37,7 @@ class Settings
         }
 
         // Show Register Page
-        if (empty($settings['app_id']) && empty($settings['api_key']) && (isset($_GET['view']) && $_GET['view'] == 'register')) {
+        if (empty($this->settings['app_id']) && empty($this->settings['api_key']) && (isset($_GET['view']) && $_GET['view'] == 'register')) {
             if (!empty($_POST) && $this->register()) {
                 wp_redirect(admin_url('admin.php?page=spromoter'));
                 exit;
@@ -45,10 +47,19 @@ class Settings
         }
 
         // Show Settings Page
-        if (!empty($settings['app_id']) && !empty($settings['api_key'])){
-            if (!empty($_POST) && isset($_POST['export_reviews']) && $_POST['export_reviews']) {
+        if (!empty($this->settings['app_id']) && !empty($this->settings['api_key'])){
+            if (!empty($_POST) && isset($_POST['export_reviews']) && $_POST['export_reviews'] ) {
                 $this->export();
             }
+
+            if (!empty($_POST) && isset($_POST['submit_past_orders']) && $_POST['submit_past_orders']) {
+               $this->submit_past_orders();
+            }
+
+            if (!empty($_POST) && isset($_POST['type']) && $_POST['type'] == 'update' && $this->update_settings()){
+
+            }
+
 
             require_once SP_PLUGIN_DIR . '/includes/views/home.php';
         }
@@ -83,10 +94,9 @@ class Settings
 
             return false;
         }else{
-            $settings = get_option('spromoter_settings');
-            $settings['app_id'] = $_POST['app_id'];
-            $settings['api_key'] = $_POST['api_key'];
-            update_option('spromoter_settings', $settings);
+            $this->settings['app_id'] = $_POST['app_id'];
+            $this->settings['api_key'] = $_POST['api_key'];
+            update_option('spromoter_settings', $this->settings);
 
             return true;
         }
@@ -127,13 +137,17 @@ class Settings
 
             return false;
         }else{
-            $settings = get_option('spromoter_settings');
-            $settings['app_id'] = $result['data']['app_id'];
-            $settings['api_key'] = $result['data']['api_key'];
-            update_option('spromoter_settings', $settings);
+            $this->settings['app_id'] = $result['data']['app_id'];
+            $this->settings['api_key'] = $result['data']['api_key'];
+            update_option('spromoter_settings', $this->settings);
 
             return true;
         }
+    }
+
+    private function update_settings(): bool
+    {
+
     }
 
     private function export()
@@ -146,6 +160,25 @@ class Settings
 
         if (is_null($error)){
             $exporter->downloadReviews($file_name);
+        }
+    }
+
+    private function submit_past_orders()
+    {
+        $pastOrder = new Orders();
+
+        $orders = $pastOrder->prepareOrders();
+
+        $api = new Api($this->settings['api_key'], $this->settings['app_id']);
+
+        $result = $api->sendRequest('orders/bulk', 'POST', [
+            'orders' => $orders,
+        ]);
+
+        if (!$result['status']) {
+            add_settings_error('spromoter_messages', 'submit_past_orders', $result['message'], 'error');
+        }else{
+            add_settings_error('spromoter_messages', 'submit_past_orders', 'Past orders is submitted successfully.', 'updated');
         }
     }
 

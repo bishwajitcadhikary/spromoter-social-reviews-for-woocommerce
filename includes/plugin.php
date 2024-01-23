@@ -131,6 +131,7 @@ final class Plugin
 
         if (is_admin()) {
             include_once 'admin/export.php';
+            include_once 'admin/orders.php';
             include_once 'admin/settings.php';
         } else {
             include_once 'frontend/widgets.php';
