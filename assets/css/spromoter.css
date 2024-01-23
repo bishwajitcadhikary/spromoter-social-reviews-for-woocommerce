@@ -435,6 +435,11 @@
     visibility: visible;
 }
 
+.spromoter-single-media:nth-child(5) .totalNumberOfMedia span {
+   line-height: 1;
+   font-size: 1rem;
+}
+
 #spromoterReviews {
     margin-top: 2rem;
 }
