@@ -16,8 +16,69 @@
  * Requires PHP:      7.2
  * Author:            SPromoter
  * Author URI:        https://spromoter.com
- * Text Domain:       spromoter-social-reviews-for-woocommerce
+ * Text Domain:       spromoter-reviews
  * Domain Path:       /languages
  * License:           GPL v2 or later
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  */
+
+use Automattic\WooCommerce\Utilities\FeaturesUtil;
+use WovoSoft\SPromoter\Install;
+use WovoSoft\SPromoter\Plugin;
+
+defined('ABSPATH') || exit;
+
+if (!defined('SP_PLUGIN_FILE')) {
+    define('SP_PLUGIN_FILE', __FILE__);
+}
+
+require_once plugin_dir_path(__FILE__) . 'includes/plugin.php';
+require_once plugin_dir_path(__FILE__) . 'includes/install.php';
+
+
+// Declare compatibility with WooCommerce features.
+add_action('before_woocommerce_init', function () {
+    if (class_exists(FeaturesUtil::class)) {
+        FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
+    }
+});
+
+/**
+ * Load and init plugin's instance
+ */
+function spromoter_social_reviews_for_woocommerce()
+{
+    if (!class_exists('WooCommerce')) {
+        // Show admin notice if WooCommerce is not installed.
+        missing_woocommerce_notice();
+        return false;
+    }
+
+    return Plugin::instance();
+}
+
+add_action('woocommerce_loaded', 'spromoter_social_reviews_for_woocommerce');
+
+/**
+ * Install plugin on activation
+ */
+function spromoter_social_reviews_for_woocommerce_activate()
+{
+    // Install the plugin if WooCommerce is installed.
+    if (class_exists('WooCommerce')) {
+        Install::install();
+    }
+}
+
+//register_activation_hook(__FILE__, 'spromoter_social_reviews_for_woocommerce_activate');
+
+function missing_woocommerce_notice()
+{
+    add_action('admin_notices', function () {
+        ?>
+        <div class="notice notice-error">
+            <p><?php esc_html_e('SPromoter Social Reviews for WooCommerce requires WooCommerce to be installed and active.', 'spromoter-reviews'); ?></p>
+        </div>
+        <?php
+    });
+}

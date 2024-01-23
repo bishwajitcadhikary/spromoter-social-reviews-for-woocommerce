@@ -1,0 +1,46 @@
+# Copyright (C) 2024 SPromoter
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: SPromoter Social Reviews for WooCommerce 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/spromoter-social-reviews-for-woocommerce\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-01-22T18:50:53+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.9.0\n"
+"X-Domain: spromoter-reviews\n"
+
+#. Plugin Name of the plugin
+msgid "SPromoter Social Reviews for WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://reviews.spromoter.com/integrations/woocommerce"
+msgstr ""
+
+#. Description of the plugin
+msgid "SPromoter Social Reviews for WooCommerce helps you to collect and display reviews from your customers on your WooCommerce store."
+msgstr ""
+
+#. Author of the plugin
+#: includes/admin/settings.php:18
+#: includes/admin/settings.php:19
+msgid "SPromoter"
+msgstr "SPromoter"
+
+#. Author URI of the plugin
+msgid "https://spromoter.com"
+msgstr ""
+
+#: includes/plugin.php:47
+#: includes/plugin.php:57
+msgid "Foul!"
+msgstr ""
+
+#: spromoter.php:80
+msgid "SPromoter Social Reviews for WooCommerce requires WooCommerce to be installed and active."
+msgstr ""
