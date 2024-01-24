@@ -7,13 +7,19 @@ namespace WovoSoft\SPromoter\Admin;
 class Api
 {
 
-    protected $api_url = 'http://api.spromoter.test/v1/';
+    protected $api_url;
     protected $api_key;
     protected $app_id;
 
     public function __construct($api_key = null, $app_id = null) {
         $this->api_key = $api_key;
         $this->app_id = $app_id;
+
+        if (defined('WP_SPROMOTER_DEV_MODE')) {
+            $this->api_url = 'http://api.spromoter.test/v1/';
+        } else {
+            $this->api_url = 'https://api.spromoter.com/v1/';
+        }
     }
 
     public function sendRequest( $endpoint, $method = 'GET', $body = [] , $headers = []) {

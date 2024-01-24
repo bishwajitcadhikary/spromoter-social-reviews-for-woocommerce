@@ -22,7 +22,7 @@
                                 <img src="<?php echo assets_path('images/logo.png'); ?>" alt="SPromoter">
                             </a>
                             <h2>
-                                <?php esc_html_e('Configure your settings!', 'spromoter-reviews'); ?>
+                                <?php esc_html_e('Configure your settings!', 'spromoter-social-reviews-for-woocommerce'); ?>
                             </h2>
                         </div>
                         <div>
@@ -32,7 +32,7 @@
                                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                         <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
                                     </svg>
-                                    <?php esc_html_e('Connected', 'spromoter-reviews'); ?>
+                                    <?php esc_html_e('Connected', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </div>
                             <?php } else { ?>
                                 <div class="spromoter-disconnected">
@@ -40,7 +40,7 @@
                                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                                     </svg>
-                                    <?php esc_html_e('Not Connected', 'spromoter-reviews'); ?>
+                                    <?php esc_html_e('Not Connected', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </div>
                             <?php } ?>
                         </div>
@@ -52,7 +52,7 @@
 
                         <div class="mb-3">
                             <label for="app_id" class="spromoter-form-label mb-2">
-                                <?php esc_html_e('App ID', 'spromoter-reviews'); ?>
+                                <?php esc_html_e('App ID', 'spromoter-social-reviews-for-woocommerce'); ?>
                             </label>
                             <input
                                 type="text"
@@ -68,7 +68,7 @@
 
                         <div class="mb-3">
                             <label for="api_key" class="spromoter-form-label mb-2">
-                                <?php esc_html_e('API Key', 'spromoter-reviews'); ?>
+                                <?php esc_html_e('API Key', 'spromoter-social-reviews-for-woocommerce'); ?>
                             </label>
                             <input
                                 type="text"
@@ -85,34 +85,34 @@
                             <label for="order_status" class="spromoter-form-label mb-2">Order Status</label>
                             <select name="order_status" id="order_status" class="spromoter-form-input spromoter-form-select">
                                 <option value="completed" <?= selected('completed', esc_html(settings('order_status')), false) ?>>
-                                    <?php esc_html_e('Completed', 'spromoter-reviews'); ?>
+                                    <?php esc_html_e('Completed', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
                                 <option value="processing" <?= selected('processing', esc_html(settings('order_status')), false) ?>>
-                                    <?php esc_html_e('Processing', 'spromoter-reviews'); ?>
+                                    <?php esc_html_e('Processing', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
                                 <option value="on-hold" <?= selected('on-hold', esc_html(settings('order_status')), false) ?>>
-                                    <?php esc_html_e('On Hold', 'spromoter-reviews'); ?>
+                                    <?php esc_html_e('On Hold', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
                                 <option value="canceled" <?= selected('canceled', esc_html(settings('order_status')), false) ?>>
-                                    <?php esc_html_e('Canceled', 'spromoter-reviews'); ?>
+                                    <?php esc_html_e('Canceled', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
                                 <option value="refunded" <?= selected('refunded', esc_html(settings('order_status')), false) ?>>
-                                    <?php esc_html_e('Refunded', 'spromoter-reviews'); ?>
+                                    <?php esc_html_e('Refunded', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
                                 <option value="failed" <?= selected('failed', esc_html(settings('order_status')), false) ?>>
-                                    <?php esc_html_e('Failed', 'spromoter-reviews'); ?>
+                                    <?php esc_html_e('Failed', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
                             </select>
                         </div>
 
                         <div class="mb-3">
-                            <label for="review_show_in" class="spromoter-form-label mb-2"><?php esc_html_e('Review Show In', 'spromoter-reviews'); ?></label>
+                            <label for="review_show_in" class="spromoter-form-label mb-2"><?php esc_html_e('Review Show In', 'spromoter-social-reviews-for-woocommerce'); ?></label>
                             <select name="review_show_in" id="review_show_in" class="spromoter-form-input spromoter-form-select">
                                 <option value="tab" <?= selected('tab', esc_html(settings('review_show_in')), false) ?>>
-                                    <?php esc_html_e('Tab', 'spromoter-reviews'); ?>
+                                    <?php esc_html_e('Tab', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
                                 <option value="footer" <?= selected('footer', esc_html(settings('review_show_in')), false) ?>>
-                                    <?php esc_html_e('Footer', 'spromoter-reviews'); ?>
+                                    <?php esc_html_e('Footer', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
                             </select>
                         </div>
@@ -127,7 +127,7 @@
                                 <?php echo checked(esc_html(settings('disable_native_review_system'))) ?>
                             >
                             <label class="spromoter-form-check-label" for="disable_native_review_system">
-                                <?php esc_html_e('Disable native review system', 'spromoter-reviews'); ?>
+                                <?php esc_html_e('Disable native review system', 'spromoter-social-reviews-for-woocommerce'); ?>
                             </label>
                         </div>
 
@@ -141,7 +141,7 @@
                                 <?php echo checked(esc_html(settings('show_bottom_line_widget'))) ?>
                             >
                             <label class="spromoter-form-check-label" for="show_bottom_line_widget">
-                                <?php esc_html_e('Enable button line in product page', 'spromoter-reviews'); ?>
+                                <?php esc_html_e('Enable button line in product page', 'spromoter-social-reviews-for-woocommerce'); ?>
                             </label>
                         </div>
                     </form>
@@ -154,10 +154,10 @@
                     <div class="spromoter-button-group">
                         <button type="submit" class="spromoter-secondary-button" form="spromoterExportForm">
                             <i class="bi bi-box-arrow-up"></i>
-                            <?php esc_html_e('Export Reviews', 'spromoter-reviews'); ?>
+                            <?php esc_html_e('Export Reviews', 'spromoter-social-reviews-for-woocommerce'); ?>
                         </button>
                         <button type="submit" class="spromoter-button" form="spromoterSettingsForm">
-                            <?php esc_html_e('Save Changes', 'spromoter-reviews'); ?>
+                            <?php esc_html_e('Save Changes', 'spromoter-social-reviews-for-woocommerce'); ?>
                         </button>
                     </div>
 
@@ -171,12 +171,12 @@
                     <div class="spromoter-admin-footer">
                         <button type="submit" class="spromoter-submit-past-order-button" form="spromoterSubmitPastOrderForm">
                             <i class="bi bi-bag-check"></i>
-                            <?php esc_html_e('Submit Previous Orders', 'spromoter-reviews'); ?>
+                            <?php esc_html_e('Submit Previous Orders', 'spromoter-social-reviews-for-woocommerce'); ?>
                             <i class="bi bi-arrow-right"></i>
                         </button>
 
                         <a href="https://spromoter.com" target="_blank" class="spromoter-link">
-                            <?php esc_html_e('Proudly powered by SPromoter', 'spromoter-reviews'); ?>
+                            <?php esc_html_e('Proudly powered by SPromoter', 'spromoter-social-reviews-for-woocommerce'); ?>
                         </a>
                     </div>
                 </div>

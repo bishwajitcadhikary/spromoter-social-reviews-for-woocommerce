@@ -50,7 +50,7 @@ class Widgets
         global $product;
         if ($product->get_reviews_allowed()) {
             $tabs['spromoter_main_widget'] = [
-                'title' => esc_html__('Reviews', 'spromoter-reviews'),
+                'title' => esc_html__('Reviews', 'spromoter-social-reviews-for-woocommerce'),
                 'priority' => 50,
                 'callback' => [$this, 'render_main_widget_in_tab']
             ];
@@ -117,13 +117,13 @@ class Widgets
 
     public function enqueue_scripts()
     {
-        wp_enqueue_script('spromoter-lightbox-scripts', 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js');
         wp_enqueue_style('spromoter', SP_PLUGIN_URL . '/assets/css/spromoter.css', [], SP_PLUGIN_VERSION);
         wp_enqueue_script('spromoter', SP_PLUGIN_URL . '/assets/js/spromoter.js', [], SP_PLUGIN_VERSION, true);
 
-        wp_localize_script('spromoter', 'spromoterSettings', array(
+        wp_localize_script('spromoter', 'spromoter_settings', array(
             'app_id' => $this->settings['app_id'],
             'bottom_line' => $this->settings['show_bottom_line_widget'],
+            'dev_mode' => defined('WP_SPROMOTER_DEV_MODE')
         ));
     }
 }

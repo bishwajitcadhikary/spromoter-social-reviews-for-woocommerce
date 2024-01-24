@@ -25,7 +25,6 @@ class Settings
 
     public function show_page()
     {
-        // Show Login Page
         if (empty($this->settings['app_id']) && empty($this->settings['api_key']) && isset($_GET['view']) && $_GET['view'] == 'login') {
             if (!empty($_POST) && $this->login()) {
                 wp_redirect(admin_url('admin.php?page=spromoter'));
@@ -34,20 +33,14 @@ class Settings
 
             require_once SP_PLUGIN_DIR . '/includes/views/login.php';
 
-        }
-
-        // Show Register Page
-        if (empty($this->settings['app_id']) && empty($this->settings['api_key']) && (isset($_GET['view']) && $_GET['view'] == 'register')) {
+        } else if (empty($this->settings['app_id']) && empty($this->settings['api_key']) && (isset($_GET['view']) && $_GET['view'] == 'register')) {
             if (!empty($_POST) && $this->register()) {
                 wp_redirect(admin_url('admin.php?page=spromoter'));
                 exit;
             }
 
             require_once SP_PLUGIN_DIR . '/includes/views/register.php';
-        }
-
-        // Show Settings Page
-        if (!empty($this->settings['app_id']) && !empty($this->settings['api_key'])){
+        }else if (!empty($this->settings['app_id']) && !empty($this->settings['api_key'])){
             if (!empty($_POST) && isset($_POST['export_reviews']) && $_POST['export_reviews'] ) {
                 $this->export();
             }
@@ -60,8 +53,10 @@ class Settings
 
             }
 
-
             require_once SP_PLUGIN_DIR . '/includes/views/home.php';
+        }else{
+            wp_redirect(admin_url('admin.php?page=spromoter&view=login'));
+            exit;
         }
     }
 
@@ -160,6 +155,7 @@ class Settings
 
         if (is_null($error)){
             $exporter->downloadReviews($file_name);
+            exit();
         }
     }
 

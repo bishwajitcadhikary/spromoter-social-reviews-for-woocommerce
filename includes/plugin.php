@@ -44,7 +44,7 @@ final class Plugin
      */
     public function __clone()
     {
-        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-reviews'), '1.0.0');
+        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-social-reviews-for-woocommerce'), '1.0.0');
     }
 
     /**
@@ -54,7 +54,7 @@ final class Plugin
      */
     public function __wakeup()
     {
-        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-reviews'), '1.0.0');
+        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-social-reviews-for-woocommerce'), '1.0.0');
     }
 
     /**
@@ -111,6 +111,7 @@ final class Plugin
         $this->define('SP_PLUGIN_URL', $this->plugin_url());
         $this->define('SP_PLUGIN_BASENAME', $this->plugin_basename());
         $this->define('SP_PLUGIN_VERSION', $this->version);
+        $this->define('SP_PLUGIN_TEXT_DOMAIN', 'spromoter-social-reviews-for-woocommerce');
     }
 
     private function define(string $name, string $value)
@@ -132,6 +133,7 @@ final class Plugin
         if (is_admin()) {
             include_once 'admin/export.php';
             include_once 'admin/orders.php';
+            include_once 'admin/updater.php';
             include_once 'admin/settings.php';
         } else {
             include_once 'frontend/widgets.php';
@@ -156,7 +158,7 @@ final class Plugin
      */
     public function load_translation()
     {
-        load_plugin_textdomain( 'spromoter-reviews', false, dirname( plugin_basename( __FILE__ ), 2 ) . '/languages/' );
+        load_plugin_textdomain( 'spromoter-social-reviews-for-woocommerce', false, dirname( plugin_basename( __FILE__ ), 2 ) . '/languages/' );
     }
 
     public function deactivate()

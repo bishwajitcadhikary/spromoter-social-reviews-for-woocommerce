@@ -16,7 +16,7 @@
  * Requires PHP:      7.2
  * Author:            SPromoter
  * Author URI:        https://spromoter.com
- * Text Domain:       spromoter-reviews
+ * Text Domain:       spromoter-social-reviews-for-woocommerce
  * Domain Path:       /languages
  * License:           GPL v2 or later
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -77,7 +77,7 @@ function missing_woocommerce_notice()
     add_action('admin_notices', function () {
         ?>
         <div class="notice notice-error">
-            <p><?php esc_html_e('SPromoter Social Reviews for WooCommerce requires WooCommerce to be installed and active.', 'spromoter-reviews'); ?></p>
+            <p><?php esc_html_e('SPromoter Social Reviews for WooCommerce requires WooCommerce to be installed and active.', 'spromoter-social-reviews-for-woocommerce'); ?></p>
         </div>
         <?php
     });
