@@ -196,6 +196,11 @@ class Settings
 
     public function submit_order($order_id)
     {
+        $order = wc_get_order($order_id);
+        if ($order->get_status() != $this->settings['order_status']) {
+            return;
+        }
+
         $order = new Orders();
         $order = $order->submit_order_data($order_id);
 

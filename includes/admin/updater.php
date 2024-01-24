@@ -45,7 +45,7 @@ class Updater {
         $this->plugin_slug   = SP_PLUGIN_TEXT_DOMAIN;
         $this->version       = SP_PLUGIN_VERSION;
         $this->cache_key     = 'spromoter_updater';
-        $this->cache_allowed = false;
+        $this->cache_allowed = true;
 
         add_filter( 'plugins_api', [ $this, 'info' ], 20, 3 );
         add_filter( 'site_transient_update_plugins', [ $this, 'update' ] );

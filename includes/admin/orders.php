@@ -13,11 +13,11 @@ class Orders
         $this->settings = settings();
     }
 
-    public function submit_order_data($order_id)
+    public function submit_order_data($order)
     {
         do_action('woocommerce_init');
 
-        $order = wc_get_order($order_id);
+        $order_id = $order->get_id();
         $orderStatus = $order->get_status();
 
         $orderData = [
