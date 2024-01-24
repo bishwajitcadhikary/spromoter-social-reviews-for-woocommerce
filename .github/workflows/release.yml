@@ -1,0 +1,24 @@
+name: Plugin Release CI/CD
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Package plugin
+        run: |
+          zip -r spromoter-social-reviews-for-woocommerce.zip spromoter-social-reviews-for-woocommerce/*
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: plugin-artifact
+          path: spromoter-social-reviews-for-woocommerce.zip

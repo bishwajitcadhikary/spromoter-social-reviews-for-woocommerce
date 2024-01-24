@@ -40,7 +40,7 @@ class Updater {
             add_filter('http_request_host_is_external', '__return_true');
         }
 
-        $this->plugin_slug   = SP_PLUGIN_TEXT_DOMAIN;
+        $this->plugin_slug   = SP_PLUGIN_DIR;
         $this->version       = SP_PLUGIN_VERSION;
         $this->cache_key     = 'spromoter_updater';
         $this->cache_allowed = false;
