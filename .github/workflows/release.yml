@@ -15,8 +15,10 @@ jobs:
 
       - name: Create Release
         uses: ncipollo/release-action@v1.13.0
+        run: |
+          zip -r spromoter-social-reviews-for-woocommerce.zip .
         with:
-          artifacts: dist
+          artifacts: spromoter-social-reviews-for-woocommerce.zip
           token: ${{ secrets.TOKEN }}
           tag: v.1.0.0.0
 
