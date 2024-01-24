@@ -27,13 +27,15 @@ class Widgets
     public function __construct()
     {
         $this->settings = settings();
-        $this->register_widgets();
+        add_action('template_redirect', [$this, 'register_widgets']);
 
         add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
     }
 
     public function register_widgets()
     {
+        add_filter( 'comments_open', [$this, 'remove_native_review_system'], null, 2 );
+
         if ($this->settings['review_show_in'] == 'tab') {
             add_action('woocommerce_product_tabs', [$this, 'show_main_widget_in_tab']);
         } elseif ($this->settings['review_show_in'] == 'footer') {
@@ -43,6 +45,15 @@ class Widgets
         if ($this->settings['show_bottom_line_widget']) {
             add_action('woocommerce_single_product_summary', [$this, 'show_bottom_line_widget'], 15);
         }
+    }
+
+    public function remove_native_review_system( $open, $post_id )
+    {
+        if ( get_post_type( $post_id ) == 'product' ) {
+            return false;
+        }
+
+        return $open;
     }
 
     public function show_main_widget_in_tab($tabs)
