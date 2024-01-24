@@ -17,14 +17,9 @@ jobs:
         run: |
           zip -r spromoter-social-reviews-for-woocommerce.zip .
 
-      - name: Create Release
-        id: create_release
-        uses: ncipollo/release-action@v1.13.0
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.3.0
         with:
-          artifacts: spromoter-social-reviews-for-woocommerce.zip
-          token: ${{ secrets.TOKEN }}
-          tag: ${{ github.event.release.tag_name }}
-          release_name: ${{ github.event.release.name }}
+          name: spromoter-social-reviews-for-woocommerce.zip
+          path: spromoter-social-reviews-for-woocommerce.zip
 
-      - name: Get Release ID
-        run: echo "Release ID - ${{ steps.create_release.outputs.id }}"
