@@ -1,24 +1,25 @@
 name: Plugin Release CI/CD
 
 on:
-  release:
-    types:
-      - created
+  push:
+    tags:
+      - '*'
 
 jobs:
   build:
+    name: Release WP Plugin
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Package plugin
+      - name: Compression
         run: |
-          zip -r spromoter-social-reviews-for-woocommerce.zip spromoter-social-reviews-for-woocommerce/*
+          zip -r spromoter-social-reviews-for-woocommerce.zip . -x ".*"
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
+      - name: Create Release
+        id: create_release
+        uses: ncipollo/release-action@v1.13.0
         with:
-          name: plugin-artifact
-          path: spromoter-social-reviews-for-woocommerce.zip
+          artifacts: "spromoter-social-reviews-for-woocommerce.zip"
+          token: ${{ secrets.TOKEN }}
