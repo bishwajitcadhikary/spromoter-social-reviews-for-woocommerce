@@ -18,3 +18,4 @@ jobs:
         with:
           files: |
             Release.txt
+          token: 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
