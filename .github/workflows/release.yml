@@ -18,4 +18,4 @@ jobs:
         with:
           files: |
             Release.txt
-          token: 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
+          token: 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
