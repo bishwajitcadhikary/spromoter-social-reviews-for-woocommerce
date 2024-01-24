@@ -13,10 +13,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Create Release
-        uses: ncipollo/release-action@v1.13.0
+      - name: Build Plugin
         run: |
           zip -r spromoter-social-reviews-for-woocommerce.zip .
+          mv spromoter-social-reviews-for-woocommerce.zip ../../../../spromoter-social-reviews-for-woocommerce.zip
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1.13.0
         with:
           artifacts: spromoter-social-reviews-for-woocommerce.zip
           token: ${{ secrets.TOKEN }}
