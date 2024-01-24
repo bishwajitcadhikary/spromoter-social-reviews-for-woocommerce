@@ -10,6 +10,7 @@ class Updater {
     public $version;
     public $cache_key;
     public $cache_allowed;
+    public $base_url = 'https://api.spromoter.com';
 
     /**
      * @var Updater
@@ -38,9 +39,10 @@ class Updater {
             add_filter('https_ssl_verify', '__return_false');
             add_filter('https_local_ssl_verify', '__return_false');
             add_filter('http_request_host_is_external', '__return_true');
+            $this->base_url = 'http://api.spromoter.test';
         }
 
-        $this->plugin_slug   = SP_PLUGIN_DIR;
+        $this->plugin_slug   = SP_PLUGIN_TEXT_DOMAIN;
         $this->version       = SP_PLUGIN_VERSION;
         $this->cache_key     = 'spromoter_updater';
         $this->cache_allowed = false;
@@ -56,7 +58,7 @@ class Updater {
 
         if( false === $remote || ! $this->cache_allowed ) {
 
-            $remote = wp_remote_get( 'http://api.spromoter.test/v1/update/wordpress/latest-version-info', [
+            $remote = wp_remote_get( $this->base_url.'/v1/update/wordpress/latest-version-info', [
                     'timeout' => 10,
                     'headers' => [
                         'Accept' => 'application/json'
