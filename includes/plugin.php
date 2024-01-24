@@ -22,7 +22,7 @@ final class Plugin
      *
      * @var string
      */
-    public $version = '1.0.6';
+    public $version;
 
     /**
      * Main Plugin Instance.
@@ -46,7 +46,7 @@ final class Plugin
      */
     public function __clone()
     {
-        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-social-reviews-for-woocommerce'), '1.0.0');
+        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-social-reviews-for-woocommerce'), $this->version);
     }
 
     /**
@@ -56,7 +56,7 @@ final class Plugin
      */
     public function __wakeup()
     {
-        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-social-reviews-for-woocommerce'), '1.0.0');
+        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-social-reviews-for-woocommerce'), $this->version);
     }
 
     /**
@@ -65,6 +65,7 @@ final class Plugin
      */
     public function __construct()
     {
+        $this->setPluginVersion();
         $this->define_constants();
         $this->includes();
         $this->init();
@@ -90,6 +91,12 @@ final class Plugin
     public function plugin_path(): string
     {
         return untrailingslashit( plugin_dir_path( dirname( __FILE__ ) ) );
+    }
+
+    public function setPluginVersion()
+    {
+        $plugin_data = get_file_data( SP_PLUGIN_FILE, array( 'Version' => 'Version' ) );
+        $this->version = $plugin_data['Version'];
     }
 
     /**

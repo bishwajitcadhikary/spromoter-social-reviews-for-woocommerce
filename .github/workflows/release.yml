@@ -15,7 +15,7 @@ jobs:
 
       - name: Compression
         run: |
-          zip -r spromoter-social-reviews-for-woocommerce.zip . -x ".*"
+          zip -r spromoter-social-reviews-for-woocommerce.zip . -x ".*" -x "build.sh"
 
       - name: Create Release
         id: create_release
