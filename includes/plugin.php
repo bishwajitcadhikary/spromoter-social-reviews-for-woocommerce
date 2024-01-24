@@ -1,6 +1,8 @@
 <?php
 namespace WovoSoft\SPromoter;
 
+use function Sodium\add;
+
 defined('ABSPATH') || exit;
 
 /**
@@ -149,7 +151,7 @@ final class Plugin
     {
         add_action('init', [$this, 'load_translation']);
 
-        register_deactivation_hook( __FILE__, [$this, 'deactivate'] );
+        register_deactivation_hook( SP_PLUGIN_FILE, [$this, 'deactivate'] );
     }
 
     /**

@@ -13,6 +13,57 @@ class Orders
         $this->settings = settings();
     }
 
+    public function submit_order_data($order_id)
+    {
+        do_action('woocommerce_init');
+
+        $order = wc_get_order($order_id);
+        $orderStatus = $order->get_status();
+
+        $orderData = [
+            'customer_name' => $order->get_billing_first_name() . ' ' . $order->get_billing_last_name(),
+            'customer_email' => $order->get_billing_email(),
+            'order_id' => "$order_id",
+            'order_date' => $order->get_date_created()->format('Y-m-d H:i:s'),
+            'currency' => $order->get_currency(),
+            'status' => $orderStatus,
+            'total' => $order->get_total(),
+            'data' => $order->get_data(),
+            'platform' => 'woocommerce',
+        ];
+
+
+        $items = array();
+        foreach ($order->get_items() as $item) {
+            $product = wc_get_product($item['product_id']);
+            $productId = $product->get_id();
+            $items[] = array(
+                'id' => "$productId",
+                'name' => $product->get_name(),
+                'image' => get_product_image_url($product->get_id()),
+                'url' => $product->get_permalink(),
+                'description' => wp_strip_all_tags($product->get_description()),
+                'lang' => get_locale(),
+                'price' => $product->get_price(),
+                'quantity' => $item['quantity'],
+                'specs' => array(
+                    'sku' => $product->get_sku(),
+                    'upc' => $product->get_attribute('upc'),
+                    'ean' => $product->get_attribute('ean'),
+                    'isbn' => $product->get_attribute('isbn'),
+                    'asin' => $product->get_attribute('asin'),
+                    'gtin' => $product->get_attribute('gtin'),
+                    'mpn' => $product->get_attribute('mpn'),
+                    'brand' => $product->get_attribute('brand'),
+                )
+            );
+        }
+
+        $orderData['items'] = $items;
+
+        return $orderData;
+    }
+
     public function prepareOrders()
     {
         $configuredAt = $this->settings['configured_at'];

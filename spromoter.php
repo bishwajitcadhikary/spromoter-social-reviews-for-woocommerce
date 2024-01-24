@@ -59,19 +59,6 @@ function spromoter_social_reviews_for_woocommerce()
 
 add_action('woocommerce_loaded', 'spromoter_social_reviews_for_woocommerce');
 
-/**
- * Install plugin on activation
- */
-function spromoter_social_reviews_for_woocommerce_activate()
-{
-    // Install the plugin if WooCommerce is installed.
-    if (class_exists('WooCommerce')) {
-        Install::install();
-    }
-}
-
-//register_activation_hook(__FILE__, 'spromoter_social_reviews_for_woocommerce_activate');
-
 function missing_woocommerce_notice()
 {
     add_action('admin_notices', function () {

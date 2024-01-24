@@ -48,7 +48,7 @@
 
                     <form id="spromoterSettingsForm" method="POST">
                         <?= wp_nonce_field('spromoter_settings_form'); ?>
-                        <input type="hidden" name="page_type" value="settings">
+                        <input type="hidden" name="type" value="update">
 
                         <div class="mb-3">
                             <label for="app_id" class="spromoter-form-label mb-2">

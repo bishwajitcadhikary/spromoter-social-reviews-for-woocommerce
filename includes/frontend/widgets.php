@@ -34,6 +34,10 @@ class Widgets
 
     public function register_widgets()
     {
+        if (empty($this->settings['app_id']) || empty($this->settings['api_key'])) {
+            return;
+        }
+
         add_filter( 'comments_open', [$this, 'remove_native_review_system'], null, 2 );
 
         if ($this->settings['review_show_in'] == 'tab') {

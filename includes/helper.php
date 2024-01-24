@@ -38,7 +38,7 @@ function get_product_image_url($product_id) {
     return wp_get_attachment_url(get_post_thumbnail_id($product_id));
 }
 
-function get_connection_status()
+function get_connection_status(): bool
 {
     $settings = settings();
 
@@ -50,7 +50,7 @@ function get_connection_status()
 
     $result = $api->sendRequest('check-credentials', 'POST');
 
-    return $result['status'];
+    return $result['status'] == 'success';
 }
 
 /**

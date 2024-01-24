@@ -14,6 +14,7 @@ class Settings
         $this->settings = settings();
         add_action('admin_menu', [$this, 'add_admin_menus']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
+        add_action('woocommerce_order_status_changed', [$this, 'submit_order']);
     }
 
     public function add_admin_menus()
@@ -142,7 +143,41 @@ class Settings
 
     private function update_settings(): bool
     {
+        wp_verify_nonce($_POST['_wpnonce'], 'spromoter_settings_form');
+        $fields = ['app_id', 'api_key', 'order_status', 'review_show_in', 'disable_native_review_system', 'show_bottom_line_widget'];
 
+        foreach ($fields as $field) {
+            if (empty($_POST[$field])) {
+                add_settings_error($field, $field, ucfirst(str_replace('_', ' ', $field)) . ' is required', 'error');
+            }
+        }
+
+        if (empty($_POST['app_id']) || empty($_POST['api_key'] || empty($_POST['order_status']) || empty($_POST['review_show_in']) || empty($_POST['disable_native_review_system']) || empty($_POST['show_bottom_line_widget']))) {
+            return false;
+        }
+
+        if (!in_array($_POST['order_status'], ['completed', 'processing', 'on-hold', 'canceled', 'refunded', 'failed'])) {
+            add_settings_error('order_status', 'order_status', 'Order status is invalid', 'error');
+        }
+
+        if (!in_array($_POST['review_show_in'], ['tab', 'footer'])) {
+            add_settings_error('review_show_in', 'review_show_in', 'Review show in is invalid', 'error');
+        }
+
+        $settings = array_merge($this->settings, [
+            'app_id' => $_POST['app_id'],
+            'api_key' => $_POST['api_key'],
+            'order_status' => $_POST['order_status'],
+            'review_show_in' => $_POST['review_show_in'],
+            'disable_native_review_system' => $_POST['disable_native_review_system'],
+            'show_bottom_line_widget' => $_POST['show_bottom_line_widget'],
+        ]);
+
+        update_option('spromoter_settings', $settings);
+
+        add_settings_error('spromoter_messages', 'spromoter_messages', 'Settings updated successfully.', 'updated');
+
+        return true;
     }
 
     private function export()
@@ -156,6 +191,22 @@ class Settings
         if (is_null($error)){
             $exporter->downloadReviews($file_name);
             exit();
+        }
+    }
+
+    public function submit_order($order_id)
+    {
+        $order = new Orders();
+        $order = $order->submit_order_data($order_id);
+
+        $api = new Api($this->settings['api_key'], $this->settings['app_id']);
+
+        $result = $api->sendRequest('orders', 'POST', $order);
+
+        if (!$result['status']) {
+            add_settings_error('spromoter_messages', 'submit_order', $result['message'], 'error');
+        }else{
+            add_settings_error('spromoter_messages', 'submit_order', 'Order is submitted successfully.', 'updated');
         }
     }
 
