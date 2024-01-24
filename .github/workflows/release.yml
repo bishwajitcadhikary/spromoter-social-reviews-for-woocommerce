@@ -15,7 +15,7 @@ jobs:
 
       - name: Package plugin
         run: |
-          zip -r spromoter-social-reviews-for-woocommerce.zip spromoter-social-reviews-for-woocommerce/*
+          zip -r spromoter-social-reviews-for-woocommerce.zip .
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
