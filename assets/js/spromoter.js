@@ -224,8 +224,6 @@ Promise.all([...scriptPromises, ...stylePromises])
         reviewForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            console.log(pond.getFile(0).file)
-
             let formData = new FormData(reviewForm);
             let formPostData = new FormData();
             formPostData.append('rating', formData.get('spromoter_form_rating'));
