@@ -1,8 +1,9 @@
 name: Plugin Release CI/CD
 
 on:
-  release:
-    types: created
+  push:
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -12,15 +13,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4.3.0
+      - name: Build Plugin
+        run: |
+          zip -r spromoter-social-reviews-for-woocommerce.zip .
+
+      - name: Create Release
+        id: create_release
+        uses: ncipollo/release-action@v1.13.0
         with:
-          name: spromoter-social-reviews-for-woocommerce.zip
-          path: .
-
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: spromoter-social-reviews-for-woocommerce.zip
-
-
+          artifacts: spromoter-social-reviews-for-woocommerce.zip
+          token: ${{ secrets.TOKEN }}
