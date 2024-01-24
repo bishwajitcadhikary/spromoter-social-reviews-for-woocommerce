@@ -19,5 +19,5 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1.13.0
         with:
-          artifacts: "includes, assets, uninstall.php, spromoter.php"
+          artifacts: "includes,/assets/,uninstall.php,spromoter.php"
           token: ${{ secrets.TOKEN }}
