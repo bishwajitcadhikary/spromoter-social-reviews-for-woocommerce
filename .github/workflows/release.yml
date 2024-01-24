@@ -1,35 +1,23 @@
 name: Plugin Release CI/CD
 
 on:
-  push
+  push:
+    branches:
+      - main
 
 jobs:
   build:
+    name: Release WP Plugin
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Upload a Build Artifact
-        run: |
-          zip -r spromoter-social-reviews-for-woocommerce.zip .
-
-        uses: actions/upload-artifact@v4.3.0
+      - name: Create Release
+        uses: ncipollo/release-action@v1.13.0
         with:
-          name: spromoter-social-reviews-for-woocommerce
-          path: ./spromoter-social-reviews-for-woocommerce.zip
+          artifacts: dist
+          token: ${{ secrets.TOKEN }}
+          tag: ${{ steps.version.outputs.tag }}
 
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: spromoter-social-reviews-for-woocommerce
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
