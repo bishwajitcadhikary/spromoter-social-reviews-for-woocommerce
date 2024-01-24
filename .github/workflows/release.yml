@@ -15,11 +15,11 @@ jobs:
 
       - name: Compression
         run: |
-          zip -r spromoter-social-reviews-for-woocommerce.zip .
+          zip -r spromoter-social-reviews-for-woocommerce.zip . -x ".*"
 
       - name: Create Release
         id: create_release
         uses: ncipollo/release-action@v1.13.0
         with:
-          artifacts: "spromoter-social-reviews-for-woocommerce.zip !.*"
+          artifacts: "spromoter-social-reviews-for-woocommerce.zip"
           token: ${{ secrets.TOKEN }}
