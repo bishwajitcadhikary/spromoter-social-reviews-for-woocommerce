@@ -13,9 +13,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
+      - name: Compression
+        run: |
+          zip -r spromoter-social-reviews-for-woocommerce.zip .
+
       - name: Create Release
         id: create_release
         uses: ncipollo/release-action@v1.13.0
         with:
-          artifacts: "includes,/assets/,uninstall.php,spromoter.php"
+          artifacts: "spromoter-social-reviews-for-woocommerce.zip"
           token: ${{ secrets.TOKEN }}
