@@ -1,9 +1,9 @@
 name: Plugin Release CI/CD
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types:
+      - created
 
 jobs:
   build:
@@ -18,10 +18,13 @@ jobs:
           zip -r spromoter-social-reviews-for-woocommerce.zip .
 
       - name: Create Release
+        id: create_release
         uses: ncipollo/release-action@v1.13.0
         with:
           artifacts: spromoter-social-reviews-for-woocommerce.zip
           token: ${{ secrets.TOKEN }}
-          tag: v.1.0.0.1
+          tag: ${{ github.event.release.tag_name }}
+          release_name: ${{ github.event.release.name }}
 
-
+      - name: Get Release ID
+        run: echo "Release ID - ${{ steps.create_release.outputs.id }}"
