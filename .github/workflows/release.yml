@@ -16,7 +16,6 @@ jobs:
       - name: Build Plugin
         run: |
           zip -r spromoter-social-reviews-for-woocommerce.zip .
-          mv spromoter-social-reviews-for-woocommerce.zip ../../../../spromoter-social-reviews-for-woocommerce.zip
 
       - name: Create Release
         uses: ncipollo/release-action@v1.13.0
