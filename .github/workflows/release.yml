@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-        permissions:
-        contents: write
 
       - name: Create Release
         id: create_release
