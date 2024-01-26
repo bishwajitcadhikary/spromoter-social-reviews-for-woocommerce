@@ -27,7 +27,7 @@ class Settings
     public function show_page()
     {
         // Update plugin
-        if (isset($_GET['action']) && $_GET['action'] =='update_plugin'){
+        if (isset($_POST['type']) && $_POST['type'] =='plugin_update'){
             $updater = Updater::instance();
             $updater->upgrade();
             wp_redirect(admin_url('admin.php?page=spromoter'));

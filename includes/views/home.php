@@ -161,8 +161,6 @@
                         </button>
                     </div>
 
-
-
                     <form method="POST" id="spromoterSubmitPastOrderForm">
                         <?= wp_nonce_field('spromoter_submit_past_orders_form'); ?>
                         <input type="hidden" name="submit_past_orders" value="true">

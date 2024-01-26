@@ -219,13 +219,18 @@ class Updater
 
         if ($update_info && version_compare($this->version, $update_info->version, '<') && !isset($_GET['action'])){
             $notice = sprintf(
-                '<div class="notice notice-info is-dismissible">
+                '<div class="notice notice-info">
                         <p>%s %s</p>
-                        <p><a class="button-primary" href="%s">%s</a></p>
+                        <form method="post" action="%s" id="spromoter-plugin-upgrade">
+                            %s
+                            <input type="hidden" name="type" value="plugin_update">
+                        </form>
+                        <p><button class="button-primary" type="submit" form="spromoter-plugin-upgrade">%s</button></p>
                     </div>',
                 __('A new version of the SPromoter Social Reviews for WooCommerce is available:', SP_PLUGIN_TEXT_DOMAIN),
                 esc_html($update_info->version),
-                wp_nonce_url(admin_url('admin.php?page=spromoter&action=update_plugin'), 'update_plugin_nonce'),
+                admin_url('admin.php?page=spromoter&action=update_plugin'),
+                wp_nonce_field('spromoter_plugin_upgrade', '_wpnonce', false, false),
                 __('Update Now', SP_PLUGIN_TEXT_DOMAIN)
             );
 
