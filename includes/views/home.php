@@ -146,7 +146,7 @@
                         </div>
                     </form>
 
-                    <form method="POST" id="spromoterExportForm" target="_blank">
+                    <form method="POST" id="spromoterExportForm">
                         <?= wp_nonce_field('spromoter_export_form'); ?>
                         <input type="hidden" name="export_reviews" value="true">
                     </form>

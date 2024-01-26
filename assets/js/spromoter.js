@@ -94,6 +94,12 @@ Promise.all([...scriptPromises, ...stylePromises])
         // Create review form
         let reviewFormWrapper = document.getElementById('spromoter-reviews-form');
 
+        if(!reviewFormWrapper){
+            console.error("Please add woocommerce_product_tabs or woocommerce_after_single_product hook in your theme's file.");
+
+            return false;
+        }
+
         reviewFormWrapper.innerHTML = `
             <form class='spromoter-review-form' enctype="multipart/form-data">
                 <div class='spromoter-rating-wrap'>
@@ -206,9 +212,9 @@ Promise.all([...scriptPromises, ...stylePromises])
         }
 
         let spromoterContainer = document.querySelector('.spromoter-container');
-
         if (!spromoterContainer) {
             console.error('Unable to load spromoter')
+            return false;
         }
 
         let productId = spromoterContainer.dataset.spromoterProductId;

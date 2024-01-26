@@ -89,14 +89,15 @@ function get_product_data($product) {
  *
  * @return array
  */
-function get_product_specs($product) {
-    return array(
-        'sku' => $product->get_sku() ?? $product->data['sku'] ?? '',
-        'upc' => $product->get_attribute('upc') ?? $product->data['upc'] ?? '',
-        'isbn' => $product->get_attribute('isbn') ?? $product->data['isbn'] ?? '',
-        'brand' => $product->get_attribute('brand') ?? $product->data['brand'] ?? '',
-        'mpn' => $product->get_attribute('mpn') ?? $product->data['mpn'] ?? '',
-    );
+function get_product_specs($product): array
+{
+    return [
+        'sku' => $product->get_sku() ?? $product->data['sku'] ?? null,
+        'upc' => $product->get_attribute('upc') ?? $product->data['upc'] ?? null,
+        'isbn' => $product->get_attribute('isbn') ?? $product->data['isbn'] ?? null,
+        'brand' => $product->get_attribute('brand') ?? $product->data['brand'] ?? null,
+        'mpn' => $product->get_attribute('mpn') ?? $product->data['mpn'] ?? null,
+    ];
 }
 
 if (!function_exists('dd')){
