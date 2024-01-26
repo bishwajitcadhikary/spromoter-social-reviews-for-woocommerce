@@ -26,6 +26,14 @@ class Settings
 
     public function show_page()
     {
+        // Update plugin
+        if (isset($_GET['action']) && $_GET['action'] =='update_plugin'){
+            $updater = Updater::instance();
+            $updater->upgrade();
+            wp_redirect(admin_url('admin.php?page=spromoter'));
+            exit;
+        }
+
         if (empty($this->settings['app_id']) && empty($this->settings['api_key']) && isset($_GET['view']) && $_GET['view'] == 'login') {
             if (!empty($_POST) && $this->login()) {
                 wp_redirect(admin_url('admin.php?page=spromoter'));

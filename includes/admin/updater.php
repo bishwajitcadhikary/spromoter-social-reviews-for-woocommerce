@@ -48,11 +48,12 @@ class Updater
         $this->plugin_slug = SP_PLUGIN_TEXT_DOMAIN;
         $this->version = SP_PLUGIN_VERSION;
         $this->cache_key = 'spromoter_updater';
-        $this->cache_allowed = true;
+        $this->cache_allowed = !defined('WP_SPROMOTER_DEV_MODE');
 
         add_filter('plugins_api', [$this, 'info'], 20, 3);
         add_filter('site_transient_update_plugins', [$this, 'update']);
         add_action('upgrader_process_complete', [$this, 'purge'], 10, 2);
+        add_action('admin_notices', [$this, 'available_notice']);
     }
 
     public function request()
@@ -143,18 +144,63 @@ class Updater
         $remote = $this->request();
 
         if ($remote && version_compare($this->version, $remote->version, '<') && version_compare($remote->requires, get_bloginfo('version'), '<=') && version_compare($remote->requires_php, PHP_VERSION, '<')) {
-            $response = new stdClass();
-            $response->slug = $this->plugin_slug;
-            $response->plugin = "{$this->plugin_slug}/spromoter.php";
-            $response->new_version = $remote->version;
-            $response->tested = $remote->tested;
-            $response->package = $remote->download_url;
-
-            $transient->response[$response->plugin] = $response;
+            $this->setTransient($remote, $transient);
         }
 
         return $transient;
 
+    }
+
+    public function upgrade()
+    {
+        $remote = $this->request();
+
+        if (!$remote) {
+            return false;
+        }
+
+        if (version_compare($this->version, $remote->version, '<') && version_compare($remote->requires, get_bloginfo('version'), '<=') && version_compare($remote->requires_php, PHP_VERSION, '<')) {
+            require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+            $upgrader = new \Plugin_Upgrader();
+
+            $transient = get_site_transient('update_plugins');
+            $transient = $this->setTransient($remote, $transient);
+            set_site_transient('update_plugins', $transient);
+
+            $result = $upgrader->upgrade(SP_PLUGIN_BASENAME);
+
+            if (!$result instanceof \WP_Error) {
+                activate_plugin(SP_PLUGIN_BASENAME);
+            }
+
+            echo sprintf('<a href="%s" class="button">%s</a>', admin_url('admin.php?page=spromoter'), __('Go to spromoter settings', SP_PLUGIN_TEXT_DOMAIN));
+            exit();
+        }else{
+            wp_redirect(admin_url('admin.php?page=spromoter'));
+            exit;
+        }
+    }
+
+    /**
+     * @param $remote
+     * @param $transient
+     * @return mixed
+     */
+    public function setTransient($remote, $transient)
+    {
+        $response = new stdClass();
+        $response->slug = $this->plugin_slug;
+        $response->plugin = SP_PLUGIN_BASENAME;
+        $response->new_version = $remote->version;
+        $response->tested = $remote->tested;
+        $response->package = $remote->download_url;
+
+        $transient->response[$response->plugin] = $response;
+
+        return $transient;
     }
 
     public function purge($updater, $options)
@@ -165,6 +211,26 @@ class Updater
             delete_transient($this->cache_key);
         }
 
+    }
+
+    public function available_notice()
+    {
+        $update_info = $this->request();
+
+        if ($update_info && version_compare($this->version, $update_info->version, '<') && !isset($_GET['action'])){
+            $notice = sprintf(
+                '<div class="notice notice-info is-dismissible">
+                        <p>%s %s</p>
+                        <p><a class="button-primary" href="%s">%s</a></p>
+                    </div>',
+                __('A new version of the SPromoter Social Reviews for WooCommerce is available:', SP_PLUGIN_TEXT_DOMAIN),
+                esc_html($update_info->version),
+                wp_nonce_url(admin_url('admin.php?page=spromoter&action=update_plugin'), 'update_plugin_nonce'),
+                __('Update Now', SP_PLUGIN_TEXT_DOMAIN)
+            );
+
+            echo $notice;
+        }
     }
 }
 

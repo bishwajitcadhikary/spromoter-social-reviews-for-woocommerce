@@ -68,7 +68,7 @@ final class Plugin
         $this->setPluginVersion();
         $this->define_constants();
         $this->includes();
-        $this->init();
+        $this->initHooks();
     }
 
     /**
@@ -150,13 +150,15 @@ final class Plugin
     }
 
     /**
-     * Initialize the plugin
+     * Initialize the plugin hooks.
      *
      * @return void
      */
-    public function init()
+    public function initHooks()
     {
         add_action('init', [$this, 'load_translation']);
+
+        add_filter( 'plugin_row_meta', [$this, 'plugin_meta_links'], 10, 2 );
 
         register_deactivation_hook( SP_PLUGIN_FILE, [$this, 'deactivate'] );
     }
@@ -168,6 +170,19 @@ final class Plugin
     public function load_translation()
     {
         load_plugin_textdomain( 'spromoter-social-reviews-for-woocommerce', false, dirname( plugin_basename( __FILE__ ), 2 ) . '/languages/' );
+    }
+
+    public function plugin_meta_links($links, $file)
+    {
+        if ($file == plugin_basename(SP_PLUGIN_FILE)) {
+            $links = array_merge($links, [
+                '<a href="' . admin_url('admin.php?page=spromoter') . '">' . __('Settings', 'spromoter-social-reviews-for-woocommerce') . '</a>',
+                '<a href="https://reviews.spromoter.com/contact" target="_blank">' . __('Contact', 'spromoter-social-reviews-for-woocommerce') . '</a>',
+                '<a href="https://github.com/bishwajitcadhikary" target="_blank">' . __('Developer', 'spromoter-social-reviews-for-woocommerce') . '</a>',
+            ]);
+        }
+
+        return $links;
     }
 
     public function deactivate()
