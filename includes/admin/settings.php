@@ -209,8 +209,8 @@ class Settings
             return;
         }
 
-        $order = new Orders();
-        $order = $order->submit_order_data($order_id);
+        $orders = new Orders();
+        $order = $orders->submit_order_data($order);
 
         $api = new Api($this->settings['api_key'], $this->settings['app_id']);
 
