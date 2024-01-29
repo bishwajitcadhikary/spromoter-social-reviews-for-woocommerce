@@ -35,7 +35,6 @@ class Orders
 
         $items = array();
         foreach ($order->get_items() as $item) {
-            dd($item);
             $product = wc_get_product($item['product_id']);
             $productId = $product->get_id();
             $items[] = array(
