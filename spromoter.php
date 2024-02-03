@@ -48,7 +48,7 @@ add_action('before_woocommerce_init', function () {
  */
 function spromoter_social_reviews_for_woocommerce()
 {
-    if (!class_exists('WooCommerce')) {
+    if (!defined('WC_VERSION')) {
         // Show admin notice if WooCommerce is not installed.
         missing_woocommerce_notice();
         return false;
@@ -57,7 +57,7 @@ function spromoter_social_reviews_for_woocommerce()
     return Plugin::instance();
 }
 
-add_action('woocommerce_loaded', 'spromoter_social_reviews_for_woocommerce');
+add_action('plugins_loaded', 'spromoter_social_reviews_for_woocommerce');
 
 function missing_woocommerce_notice()
 {
