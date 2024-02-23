@@ -101,15 +101,16 @@ function get_product_specs($product): array
 }
 
 if (!function_exists('dd')){
-    /**
-     * Dump and die
-     * @param $data
-     * @return void
-     */
-    function dd($data){
-        echo '<pre>';
-        print_r($data);
-        echo '</pre>';
-        die();
+    function dd(...$data){
+        // check if multiple arguments are passed
+        if (count($data) > 1){
+            echo '<pre>';
+            var_dump($data);
+            echo '</pre></div>';
+        } else {
+            echo '<div><pre>';
+            var_dump($data[0]);
+            echo '</pre></div>';
+        }
     }
 }

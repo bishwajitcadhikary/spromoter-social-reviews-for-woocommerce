@@ -59,8 +59,8 @@ let stylePromises = scripts.css.map(loadStyle);
 Promise.all([...scriptPromises, ...stylePromises])
     .then(() => {
 
-        function sendRequest(endpoint, method = 'POST', body = null, headers = {}){
-            let baseURL = spromoter_settings.dev_mode ? 'http://api.spromoter.test/v1/' : 'https://api.spromoter.com/v1/';
+        function sendRequest(endpoint, method = 'POST', body = null, headers = {}) {
+            let baseURL = spromoter_settings.dev_mode ? '//api.spromoter.test/v1/' : 'https://api.spromoter.com/v1/';
             let appId = spromoter_settings.app_id;
 
             headers = {
@@ -70,11 +70,11 @@ Promise.all([...scriptPromises, ...stylePromises])
                 ...headers
             }
 
-            if (method === 'GET'){
+            if (method === 'GET') {
                 endpoint += '?' + new URLSearchParams(body).toString();
-            }else if((body instanceof FormData)){
+            } else if ((body instanceof FormData)) {
                 delete headers['Content-Type'];
-            }else{
+            } else {
                 body = JSON.stringify(body);
             }
 
@@ -91,10 +91,67 @@ Promise.all([...scriptPromises, ...stylePromises])
             })
         }
 
+        // Load product ratings
+        let products = document.querySelectorAll('.spromoter-product-star-rating');
+        if (products.length > 0) {
+            let productIds = [];
+            products.forEach(product => {
+                // if product id is not exist then skip
+                if (!product.dataset.productId) {
+                    return;
+                }
+
+                productIds.push(product.dataset.productId);
+
+                // If after the product tag has .count class then remove it
+                let count = product.nextElementSibling;
+                if (count && count.classList.contains('count')) {
+                    count.remove();
+                }
+            });
+
+            let loadProductRatings = sendRequest('ratings', 'POST', {
+                products: productIds
+            });
+
+            loadProductRatings.then(function (response) {
+                for (let i = 0; i < products.length; i++) {
+                    let productId = products[i].dataset.productId;
+                    let product = response.data[productId];
+                    let productRating = product?.rating;
+                    let productTotalReviews = product?.count;
+
+                    if (product) {
+                        let stars = '';
+                        for (let i = 0; i < 5; i++) {
+                            if (productRating % 1 !== 0 && i === Math.floor(productRating)) {
+                                stars += '<i class="bi bi-star-half"></i>';
+                            } else if (i < productRating) {
+                                stars += '<i class="bi bi-star-fill"></i>';
+                            } else {
+                                stars += '<i class="bi bi-star"></i>';
+                            }
+                        }
+
+                        stars += `<span class="spromoter-product-star-rating-count">(${productTotalReviews})</span>`;
+
+                        products[i].innerHTML = stars;
+                    } else {
+                        let stars = '';
+                        for (let i = 0; i < 5; i++) {
+                            stars += '<i class="bi bi-star"></i>';
+                        }
+
+                        products[i].innerHTML = stars;
+                    }
+                }
+            });
+        }
+
         // Create review form
         let reviewFormWrapper = document.getElementById('spromoter-reviews-form');
 
-        if(!reviewFormWrapper){
+        if (!reviewFormWrapper) {
             console.error("Please add woocommerce_product_tabs or woocommerce_after_single_product hook in your theme's file.");
 
             return false;
@@ -134,7 +191,6 @@ Promise.all([...scriptPromises, ...stylePromises])
         FilePond.registerPlugin(
             FilePondPluginFileValidateSize,
             FilePondPluginFileValidateType,
-
         )
         let filepond = document.getElementById('filepond');
         const pond = FilePond.create(filepond, {
@@ -177,7 +233,7 @@ Promise.all([...scriptPromises, ...stylePromises])
             </form>`;
 
         // Open review form after click the 'write review button'
-        document.getElementById('spromoter-write-review-button').addEventListener('click', function() {
+        document.getElementById('spromoter-write-review-button').addEventListener('click', function () {
             let spromoterReviewForm = document.querySelector('.spromoter-review-form');
             if (spromoterReviewForm.style.display === "none" || spromoterReviewForm.style.display === "") {
                 spromoterReviewForm.style.display = "block";
@@ -190,7 +246,7 @@ Promise.all([...scriptPromises, ...stylePromises])
         const productReviewBox = document.querySelector('div.spromoter-product-review-box');
 
         if (productReviewBox) {
-            productReviewBox.addEventListener('click', function() {
+            productReviewBox.addEventListener('click', function () {
                 const spromoterWidgetTabLink = document.querySelector('li.spromoter_main_widget_tab > a');
 
                 if (spromoterWidgetTabLink) {
@@ -199,13 +255,13 @@ Promise.all([...scriptPromises, ...stylePromises])
                     const reviewContainerSection = document.getElementById('spromoterReviewContainer');
 
                     if (reviewContainerSection) {
-                        reviewContainerSection.scrollIntoView({ behavior: 'smooth' });
+                        reviewContainerSection.scrollIntoView({behavior: 'smooth'});
                     }
-                }else{
+                } else {
                     const reviewContainerSection = document.getElementById('spromoterReviewContainer');
 
                     if (reviewContainerSection) {
-                        reviewContainerSection.scrollIntoView({ behavior: 'smooth' });
+                        reviewContainerSection.scrollIntoView({behavior: 'smooth'});
                     }
                 }
             });
@@ -237,7 +293,7 @@ Promise.all([...scriptPromises, ...stylePromises])
             formPostData.append('comment', formData.get('spromoter_form_comment'));
             formPostData.append('name', formData.get('spromoter_form_name'));
             formPostData.append('email', formData.get('spromoter_form_email'));
-            for(let i = 0; i < pond.getFiles().length; i++) {
+            for (let i = 0; i < pond.getFiles().length; i++) {
                 formPostData.append('files[]', pond.getFile(i).file);
             }
             formPostData.append('product_id', productId);
@@ -284,6 +340,7 @@ Promise.all([...scriptPromises, ...stylePromises])
                 function reviewButtonHide() {
                     reviewButton.style.display = 'block';
                 }
+
                 setTimeout(reviewButtonHide, 7000);
 
                 // Show success message
@@ -302,6 +359,7 @@ Promise.all([...scriptPromises, ...stylePromises])
                 function messageHide() {
                     successMessage.style.display = 'none';
                 }
+
                 setTimeout(messageHide, 7000);
             }).finally(function () {
                 // Enable submit button
@@ -325,7 +383,7 @@ Promise.all([...scriptPromises, ...stylePromises])
             createReviewContainers(reviews);
             createLoadMoreButton(response.data?.has_more);
 
-            if (!!spromoter_settings.bottom_line){
+            if (!!spromoter_settings.bottom_line) {
                 createBottomLine(response.data?.average_rating ?? 0, response.data?.total_reviews ?? 0)
             }
         })
@@ -352,7 +410,7 @@ Promise.all([...scriptPromises, ...stylePromises])
 
                 createReviewContainers(reviews, true);
                 createLoadMoreButton(response.data?.has_more);
-                page=1;
+                page = 1;
             })
         }
 
@@ -364,7 +422,7 @@ Promise.all([...scriptPromises, ...stylePromises])
         function createLoadMoreButton(has_more) {
             let loadMoreBtn = document.getElementById('spromoter-load-more-btn');
 
-            if(has_more) {
+            if (has_more) {
                 if (loadMoreBtn) {
                     loadMoreBtn.style.display = "block";
                 } else {
@@ -376,7 +434,7 @@ Promise.all([...scriptPromises, ...stylePromises])
                     newLoadMoreBtn.innerText = 'Load more';
                     spromoterActions.append(newLoadMoreBtn);
 
-                    newLoadMoreBtn.addEventListener('click', function() {
+                    newLoadMoreBtn.addEventListener('click', function () {
                         // Disable load more button
                         newLoadMoreBtn.disabled = true;
                         newLoadMoreBtn.innerText = 'Loading...';
@@ -405,7 +463,7 @@ Promise.all([...scriptPromises, ...stylePromises])
                         });
                     })
                 }
-            }else{
+            } else {
                 if (loadMoreBtn) {
                     loadMoreBtn.style.display = "none";
                 }
@@ -432,7 +490,7 @@ Promise.all([...scriptPromises, ...stylePromises])
             const spromoterReviews = document.getElementById('spromoterReviews');
             const reviewContainer = document.createElement('div');
             reviewContainer.classList.add('spromoter-single-review');
-            const purchased = `<span class="spromoter-purchased"><i class="bi bi-patch-check-fill"></i></span>`;
+            const verified = `<span class="spromoter-verified"><i class="bi bi-patch-check-fill spromoter-verified-icon"></i> Verified</span>`;
             let attachments = '';
 
             if (item.attachments?.length > 0) {
@@ -464,7 +522,9 @@ Promise.all([...scriptPromises, ...stylePromises])
                         <div>
                             <div class="spromoter-name">
                                 ${item.name}
-                                ${item.is_purchased ? purchased : ''}
+                            </div>
+                            <div>
+                                ${item.is_verified ? verified : ''}
                             </div>
                             <div class="spromoter-date">${item.date}</div>
                         </div>
@@ -501,7 +561,7 @@ Promise.all([...scriptPromises, ...stylePromises])
                 ratings: ratings,
                 comment: review.comment,
                 attachments: review.attachments,
-                is_purchased: review.is_purchased
+                is_verified: review.is_verified
             }
         }
 

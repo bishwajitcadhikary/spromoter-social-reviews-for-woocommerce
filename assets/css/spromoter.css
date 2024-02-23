@@ -328,13 +328,26 @@
 .spromoter-ratings .bi-star-fill,
 .spromoter-ratings .bi-star-half,
 .spromoter-ratings .bi-star,
+.spromoter-product-star-rating .bi-star-fill,
+.spromoter-product-star-rating .bi-star-half,
+.spromoter-product-star-rating .bi-star,
 .spromoter-product-review-box-rating .bi-star-fill,
 .spromoter-product-review-box-rating .bi-star-half,
 .spromoter-product-review-box-rating .bi-star {
     color: #ffc107;
 }
 
-.spromoter-comments {
+.spromoter-product-star-rating-count {
+    font-size: 14px;
+    margin-left: 0.5rem;
+}
+
+.spromoter-verified-icon {
+    color: #387ADF;
+    font-size: 1.25rem;
+}
+
+.spromoter-comments, .spromoter-verified {
     color: #8480ae;
 }
 

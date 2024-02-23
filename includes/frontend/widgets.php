@@ -30,6 +30,19 @@ class Widgets
         add_action('template_redirect', [$this, 'register_widgets']);
 
         add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
+
+        add_filter('woocommerce_product_get_rating_html', [$this, 'product_get_rating_html'], 10, 3);
+    }
+
+    public function product_get_rating_html(  )
+    {
+        global $product;
+
+        if ( ! $product->get_reviews_allowed() ) {
+            return '';
+        }
+
+        return '<div class="spromoter-product-star-rating" data-product-id="'.$product->get_id().'"></div>';
     }
 
     public function register_widgets()
