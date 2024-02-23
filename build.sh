@@ -10,7 +10,7 @@ current_version=$(grep -oE "Version:[[:space:]]+[0-9.]+" "$php_file" | awk '{pri
 new_version=$(echo "$current_version" | awk -F '.' '{print $1"."$2"."$3 + 1}')
 
 # Update the version in the PHP file
-sed -i '' "s/Version:[[:space:]]*$current_version/Version:          $new_version/" "$php_file"
+sed -i '' "s/Version:[[:space:]]*$current_version/Version:           $new_version/" "$php_file"
 
 # Display the updated version in green
 echo -e "\033[0;32mVersion increased to $new_version\033[0m"
