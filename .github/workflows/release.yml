@@ -15,7 +15,10 @@ jobs:
 
       - name: Compression
         run: |
-          zip -r spromoter-social-reviews-for-woocommerce.zip . -x ".*" -x "build.sh"
+          mkdir -p spromoter-social-reviews-for-woocommerce
+          rsync -av --progress ./* spromoter-social-reviews-for-woocommerce/ --exclude="build.sh" --exclude="spromoter-social-reviews-for-woocommerce.zip" --exclude="spromoter-social-reviews-for-woocommerce"
+          zip -r spromoter-social-reviews-for-woocommerce.zip ./spromoter-social-reviews-for-woocommerce
+          rm -rf spromoter-social-reviews-for-woocommerce
 
       - name: Create Release
         id: create_release
