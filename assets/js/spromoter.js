@@ -103,10 +103,16 @@ Promise.all([...scriptPromises, ...stylePromises])
 
                 productIds.push(product.dataset.productId);
 
-                // If after the product tag has .count class then remove it
-                let count = product.nextElementSibling;
-                if (count && count.classList.contains('count')) {
-                    count.remove();
+                // Remove previous and next element sibling
+                let previousElementSibling = product.previousElementSibling;
+                let nextElementSibling = product.nextElementSibling;
+
+                if (previousElementSibling) {
+                    previousElementSibling.remove();
+                }
+
+                if (nextElementSibling) {
+                    nextElementSibling.remove();
                 }
             });
 
@@ -141,6 +147,8 @@ Promise.all([...scriptPromises, ...stylePromises])
                         for (let i = 0; i < 5; i++) {
                             stars += '<i class="bi bi-star"></i>';
                         }
+
+                        stars += `<span class="spromoter-product-star-rating-count">(0)</span>`;
 
                         products[i].innerHTML = stars;
                     }
