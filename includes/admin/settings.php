@@ -91,8 +91,12 @@ class Settings
             'app_id' => $_POST['app_id'],
         ));
 
-        if (!$result['status']) {
-            foreach ($result['errors'] as $key => $message) {
+        if (isset($result['status']) && $result['status'] == 'error' || !$result) {
+            if ($result['message'] == 'Unauthenticated'){
+                add_settings_error('api_key', 'api_key', 'Please enter valid api key', 'error');
+            }
+
+            foreach ($result['errors'] ?? [] as $key => $message) {
                 add_settings_error($key, $key, $message);
             }
 

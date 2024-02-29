@@ -20,7 +20,7 @@ function settings($key = null)
         'app_id' => '',
         'api_key' => '',
         'order_status' => 'completed',
-        'review_show_in' => 'footer',
+        'review_show_in' => 'tab',
         'disable_native_review_system' => true,
         'show_bottom_line_widget' => true,
         'debug_mode' => true,
@@ -50,7 +50,7 @@ function get_connection_status(): bool
 
     $result = $api->sendRequest('check-credentials', 'POST');
 
-    return $result['status'] == 'success';
+    return $result['status'] ?? false;
 }
 
 /**
@@ -95,7 +95,6 @@ function get_product_specs($product): array
         'sku' => $product->get_sku() ?? $product->data['sku'] ?? null,
         'upc' => $product->get_attribute('upc') ?? $product->data['upc'] ?? null,
         'isbn' => $product->get_attribute('isbn') ?? $product->data['isbn'] ?? null,
-        'brand' => $product->get_attribute('brand') ?? $product->data['brand'] ?? null,
         'mpn' => $product->get_attribute('mpn') ?? $product->data['mpn'] ?? null,
     ];
 }
@@ -104,13 +103,16 @@ if (!function_exists('dd')){
     function dd(...$data){
         // check if multiple arguments are passed
         if (count($data) > 1){
-            echo '<pre>';
-            var_dump($data);
-            echo '</pre></div>';
+            foreach ($data as $item){
+                echo '<div><pre>';
+                var_dump($item);
+                echo '</pre></div>';
+            }
         } else {
             echo '<div><pre>';
             var_dump($data[0]);
             echo '</pre></div>';
+            die();
         }
     }
 }

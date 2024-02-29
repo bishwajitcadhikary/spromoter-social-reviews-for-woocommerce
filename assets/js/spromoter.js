@@ -380,7 +380,8 @@ Promise.all([...scriptPromises, ...stylePromises])
         let page = 1;
         let loadReviews = sendRequest('reviews', 'POST', {
             product_id: productId,
-            page: page
+            page: page,
+            specs: productSpecs
         });
 
         loadReviews.then(function (response) {
