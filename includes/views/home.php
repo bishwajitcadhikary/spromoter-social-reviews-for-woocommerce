@@ -172,10 +172,6 @@
                             <?php esc_html_e('Submit Previous Orders', 'spromoter-social-reviews-for-woocommerce'); ?>
                             <i class="bi bi-arrow-right"></i>
                         </button>
-
-                        <a href="https://spromoter.com" target="_blank" class="spromoter-link">
-                            <?php esc_html_e('Proudly powered by SPromoter', 'spromoter-social-reviews-for-woocommerce'); ?>
-                        </a>
                     </div>
                 </div>
             </div>
