@@ -4,7 +4,7 @@
 
 <div class="spromoter-container">
     <div class="spromoter-bg-shape">
-        <img src="<?php echo assets_path('images/shape.png'); ?>" alt="SPromoter">
+        <img src="<?php echo esc_url(assets_path('images/shape.png')); ?>" alt="SPromoter">
     </div>
     <div class="spromoter-wrapper">
         <div class="spromoter-inner">
@@ -19,7 +19,7 @@
                         <div>
                             <!-- Logo -->
                             <a href="#" class="spromoter-brand">
-                                <img src="<?php echo assets_path('images/logo.png'); ?>" alt="SPromoter">
+                                <img src="<?php echo esc_url(assets_path('images/logo.png')); ?>" alt="SPromoter">
                             </a>
                             <h2>
                                 <?php esc_html_e('Configure your settings!', 'spromoter-social-reviews-for-woocommerce'); ?>

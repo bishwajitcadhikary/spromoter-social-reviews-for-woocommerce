@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/bishwajitca
 Tags: woocommerce, reviews, social reviews, spromoter
 Requires at least: 5.3
 Tested up to: 6.5.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -35,10 +35,17 @@ Yes, you can customize the appearance of the review widget to match your store's
 = 1.0.0 =
 Initial release version.
 
+= 1.0.1 =
+* Fixed some security issues.
+* Fixed some minor bugs.
+
 == Upgrade Notice ==
 
 = 1.0.0 =
 This is the initial release version of the plugin.
+
+= 1.0.1 =
+This version includes security fixes and minor bug fixes.
 
 == License ==
 

@@ -136,16 +136,16 @@ class Widget
 
         echo "<div 
 			class='spromoter-container' id='spromoterReviewContainer'
-			data-spromoter-app-id='" .$product_data['app_id']. "'
-			data-spromoter-product-id='" .$product_data['id']. "'
-			data-spromoter-product-title='" .$product_data['title']. "'
-			data-spromoter-product-image-url='" .$product_data['image-url']. "'
-			data-spromoter-product-url='" .$product_data['url']. "'
-			data-spromoter-product-description='" .$product_data['description']. "'
-			data-spromoter-product-lang='" .$product_data['lang']. "'
-			data-spromoter-product-shop-domain='" .$product_data['shop_domain']. "'
-			data-spromoter-product-app-id='" .$product_data['app_id']. "'
-			data-spromoter-product-specs='" .wp_json_encode($product_data['specs']). "'
+			data-spromoter-app-id='" .esc_html($product_data['app_id']). "'
+			data-spromoter-product-id='" .esc_html($product_data['id']). "'
+			data-spromoter-product-title='" .esc_html($product_data['title']). "'
+			data-spromoter-product-image-url='" .esc_html($product_data['image-url']). "'
+			data-spromoter-product-url='" .esc_html($product_data['url']). "'
+			data-spromoter-product-description='" .esc_html($product_data['description']). "'
+			data-spromoter-product-lang='" .esc_html($product_data['lang']). "'
+			data-spromoter-product-shop-domain='" .esc_html($product_data['shop_domain']). "'
+			data-spromoter-product-app-id='" .esc_html($product_data['app_id']). "'
+			data-spromoter-product-specs='" .wp_json_encode(esc_html($product_data['specs'])). "'
 			>
 			<div class='spromoter-total-review-show-wrap'>
 				<div class='powered-by-spromoter'>Powered by - Spromoter</div>
@@ -176,9 +176,9 @@ class Widget
             $product_data = get_product_data($product);
 
             echo "<div class='spromoter-product-review-box' 
-			data-product-id='".$product_data['id']."'
-			data-url='".$product_data['url']."' 
-			data-lang='".$product_data['lang']."'></div>";
+			data-product-id='".esc_html($product_data['id'])."'
+			data-url='".esc_html($product_data['url'])."' 
+			data-lang='".esc_html($product_data['lang'])."'></div>";
         }
     }
 

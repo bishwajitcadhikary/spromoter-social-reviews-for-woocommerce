@@ -40,7 +40,7 @@ final class Plugin
      */
     public function __clone()
     {
-        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-social-reviews-for-woocommerce'), constant('SP_PLUGIN_VERSION'));
+        _doing_it_wrong(__FUNCTION__, esc_html__('Foul!', 'spromoter-social-reviews-for-woocommerce'), esc_html(constant('SP_PLUGIN_VERSION')));
     }
 
     /**
@@ -50,7 +50,7 @@ final class Plugin
      */
     public function __wakeup()
     {
-        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-social-reviews-for-woocommerce'), constant('SP_PLUGIN_VERSION'));
+        _doing_it_wrong(__FUNCTION__, esc_html__('Foul!', 'spromoter-social-reviews-for-woocommerce'), esc_html(constant('SP_PLUGIN_VERSION')));
     }
 
     /**

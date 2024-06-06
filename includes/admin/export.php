@@ -134,26 +134,34 @@ class Export
     protected function get_all_reviews(): array
     {
         global $wpdb;
+
+        // Check if the data is already cached
+        $cache_key = 'all_reviews_data';
+        $cached_data = wp_cache_get($cache_key, 'review_data');
+        if ($cached_data !== false) {
+            return $cached_data;
+        }
+
         $results = $wpdb->get_results("
-                SELECT
-                    `" . $wpdb->prefix . "comments`.`comment_ID` AS `review_id`,
-                    `" . $wpdb->prefix . "comments`.`comment_approved` AS `review_status`,
-                    comment_post_ID AS product_id, 
-                    comment_author AS display_name, 
-                    comment_date AS date,
-                    comment_author_email AS user_email, 
-                    comment_content AS review_content, 
-                    meta_value AS review_score,
-                    post_content AS product_description,
-                    post_title AS product_title,
-                    user_id,
-                    CASE WHEN oi.order_item_id IS NOT NULL THEN 1 ELSE 0 END AS verified_purchase
-                FROM `" . $wpdb->prefix . "comments` 
-                INNER JOIN `" . $wpdb->prefix . "posts` ON `" . $wpdb->prefix . "posts`.`ID` = `" . $wpdb->prefix . "comments`.`comment_post_ID` 
-                INNER JOIN `" . $wpdb->prefix . "commentmeta` ON `" . $wpdb->prefix . "commentmeta`.`comment_id` = `" . $wpdb->prefix . "comments`.`comment_ID`
-                LEFT JOIN `" . $wpdb->prefix . "woocommerce_order_items` AS oi ON oi.order_item_id = `" . $wpdb->prefix . "comments`.`comment_post_ID`
-                WHERE `post_type` = 'product' AND meta_key='rating'
-        ");
+            SELECT
+                `" . $wpdb->prefix . "comments`.`comment_ID` AS `review_id`,
+                `" . $wpdb->prefix . "comments`.`comment_approved` AS `review_status`,
+                comment_post_ID AS product_id, 
+                comment_author AS display_name, 
+                comment_date AS date,
+                comment_author_email AS user_email, 
+                comment_content AS review_content, 
+                meta_value AS review_score,
+                post_content AS product_description,
+                post_title AS product_title,
+                user_id,
+                CASE WHEN oi.order_item_id IS NOT NULL THEN 1 ELSE 0 END AS verified_purchase
+            FROM `" . $wpdb->prefix . "comments` 
+            INNER JOIN `" . $wpdb->prefix . "posts` ON `" . $wpdb->prefix . "posts`.`ID` = `" . $wpdb->prefix . "comments`.`comment_post_ID` 
+            INNER JOIN `" . $wpdb->prefix . "commentmeta` ON `" . $wpdb->prefix . "commentmeta`.`comment_id` = `" . $wpdb->prefix . "comments`.`comment_ID`
+            LEFT JOIN `" . $wpdb->prefix . "woocommerce_order_items` AS oi ON oi.order_item_id = `" . $wpdb->prefix . "comments`.`comment_post_ID`
+            WHERE `post_type` = 'product' AND meta_key='rating'
+    ");
 
         $all_reviews = [];
 
@@ -178,6 +186,10 @@ class Export
 
             $all_reviews[] = $current_review;
         }
+
+        // Cache the data
+        wp_cache_set($cache_key, $all_reviews, 'review_data', 10);
+
         return $all_reviews;
     }
 
