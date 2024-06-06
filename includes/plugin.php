@@ -1,7 +1,6 @@
 <?php
-namespace WovoSoft\SPromoter;
 
-use function Sodium\add;
+namespace WovoSoft\SPromoter;
 
 defined('ABSPATH') || exit;
 
@@ -13,16 +12,10 @@ defined('ABSPATH') || exit;
 final class Plugin
 {
     /**
-     * @var Plugin
+     * @var Plugin|null The single instance of the class
+     * @since 1.0.0
      */
-    private static $_instance;
-
-    /**
-     * SPromoter version.
-     *
-     * @var string
-     */
-    public $version;
+    private static ?Plugin $_instance = null;
 
     /**
      * Main Plugin Instance.
@@ -30,6 +23,7 @@ final class Plugin
      * Ensures only one instance of Plugin is loaded or can be loaded.
      *
      * @return Plugin
+     * @since 1.0.0
      */
     public static function instance(): Plugin
     {
@@ -46,7 +40,7 @@ final class Plugin
      */
     public function __clone()
     {
-        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-social-reviews-for-woocommerce'), $this->version);
+        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-social-reviews-for-woocommerce'), constant('SP_PLUGIN_VERSION'));
     }
 
     /**
@@ -56,73 +50,126 @@ final class Plugin
      */
     public function __wakeup()
     {
-        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-social-reviews-for-woocommerce'), $this->version);
+        _doing_it_wrong(__FUNCTION__, __('Foul!', 'spromoter-social-reviews-for-woocommerce'), constant('SP_PLUGIN_VERSION'));
     }
 
     /**
      * SPromoter Constructor.
+     *
      * @since 1.0.0
      */
     public function __construct()
     {
-        $this->setPluginVersion();
         $this->define_constants();
-        $this->includes();
-        $this->initHooks();
+        $this->include_files();
+        $this->init_hooks();
     }
 
     /**
-     * Plugin URL getter.
+     * Define SPromoter Constants.
      *
-     * @param string $path
-     * @return string
+     * @return void
+     * @since 1.0.0
      */
-    public function plugin_url(string $path = '/' ): string
+    private function define_constants(): void
     {
-        return untrailingslashit( plugins_url( $path, dirname( __FILE__ ) ) );
+        $this->define('SP_DEBUG', $this->is_dev_mode());
+        $this->define('SP_PLUGIN_DIR', $this->plugin_path());
+        $this->define('SP_PLUGIN_URL', $this->plugin_url());
+        $this->define('SP_PLUGIN_BASENAME', $this->plugin_basename());
+        $this->define('SP_PLUGIN_VERSION', $this->plugin_version());
+        $this->define('SP_PLUGIN_TEXT_DOMAIN', $this->plugin_text_domain());
+        $this->define('SP_API_URL', $this->api_url());
+    }
 
+    /**
+     * Check if the plugin is in development mode.
+     *
+     * @return bool The value of the constant if it is defined, and false otherwise.
+     * @since 1.0.0
+     */
+    public function is_dev_mode(): bool
+    {
+        return defined('SP_DEBUG') && constant('SP_DEBUG');
     }
 
     /**
      * Plugin path getter.
      *
-     * @return string
+     * @return string Plugin path
+     * @since 1.0.0
      */
     public function plugin_path(): string
     {
-        return untrailingslashit( plugin_dir_path( dirname( __FILE__ ) ) );
+        return untrailingslashit(plugin_dir_path(dirname(__FILE__)));
     }
 
-    public function setPluginVersion()
+    /**
+     * Plugin URL getter.
+     *
+     * @param string $path Path to append to the URL
+     * @return string Plugin URL
+     * @since 1.0.0
+     */
+    public function plugin_url(string $path = '/'): string
     {
-        $plugin_data = get_file_data( SP_PLUGIN_FILE, array( 'Version' => 'Version' ) );
-        $this->version = $plugin_data['Version'];
+        return untrailingslashit(plugins_url($path, dirname(__FILE__)));
     }
 
     /**
      * Plugin base name
      *
      * @return string
+     * @since 1.0.0
      */
     public function plugin_basename(): string
     {
-        return dirname( plugin_basename( __FILE__ ), 2 ) . '/spromoter.php';
+        return dirname(constant('SP_PLUGIN_FILE'), 2) . '/spromoter.php';
     }
 
     /**
-     * Define SPromoter Constants.
-     * @return void
+     * Get the plugin version.
+     *
+     * @return string
+     * @since 1.0.0
      */
-    private function define_constants()
+    public function plugin_version(): string
     {
-        $this->define('SP_PLUGIN_FILE', __FILE__);
-        $this->define('SP_PLUGIN_DIR', $this->plugin_path());
-        $this->define('SP_PLUGIN_URL', $this->plugin_url());
-        $this->define('SP_PLUGIN_BASENAME', $this->plugin_basename());
-        $this->define('SP_PLUGIN_VERSION', $this->version);
-        $this->define('SP_PLUGIN_TEXT_DOMAIN', 'spromoter-social-reviews-for-woocommerce');
+        $plugin_data = get_file_data(SP_PLUGIN_FILE, array('Version' => 'Version'));
+        return $plugin_data['Version'];
     }
 
+    /**
+     * Get the plugin text domain.
+     *
+     * @return string
+     * @since 1.0.0
+     */
+    private function plugin_text_domain(): string
+    {
+        $plugin_data = get_file_data(SP_PLUGIN_FILE, array('Text Domain' => 'Text Domain'));
+        return $plugin_data['Text Domain'];
+    }
+
+    /**
+     * Get the API URL.
+     *
+     * @return string
+     * @since 1.0.0
+     */
+    private function api_url(): string
+    {
+        return $this->is_dev_mode() ? 'https://api.spromoter.wovosoft.xyz/v1/' : 'https://api.spromoter.com/v1/';
+    }
+
+    /**
+     * Define a constant if it is not already defined.
+     *
+     * @param string $name
+     * @param string $value
+     * @return void
+     * @since 1.0.0
+     */
     private function define(string $name, string $value)
     {
         if (!defined($name)) {
@@ -132,20 +179,21 @@ final class Plugin
 
     /**
      * Include required core files used in admin and on the frontend.
+     *
      * @return void
+     * @since 1.0.0
      */
-    private function includes()
+    private function include_files()
     {
         include_once 'helper.php';
         include_once 'admin/api.php';
 
         if (is_admin()) {
             include_once 'admin/export.php';
-            include_once 'admin/orders.php';
-            include_once 'admin/updater.php';
-            include_once 'admin/settings.php';
+            include_once 'admin/order.php';
+            include_once 'admin/setting.php';
         } else {
-            include_once 'frontend/widgets.php';
+            include_once 'frontend/widget.php';
         }
     }
 
@@ -153,42 +201,55 @@ final class Plugin
      * Initialize the plugin hooks.
      *
      * @return void
+     * @since 1.0.0
      */
-    public function initHooks()
+    public function init_hooks()
     {
         add_action('init', [$this, 'load_translation']);
 
-        add_filter( 'plugin_row_meta', [$this, 'plugin_meta_links'], 10, 2 );
+        add_filter('plugin_row_meta', [$this, 'plugin_meta_links'], 10, 2);
 
-        register_deactivation_hook( SP_PLUGIN_FILE, [$this, 'deactivate'] );
+        register_deactivation_hook(SP_PLUGIN_FILE, [$this, 'deactivate']);
     }
 
     /**
      * Load Localisation files.
+     *
      * @return void
+     * @since 1.0.0
      */
     public function load_translation()
     {
-        load_plugin_textdomain( 'spromoter-social-reviews-for-woocommerce', false, dirname( plugin_basename( __FILE__ ), 2 ) . '/languages/' );
+        load_plugin_textdomain('spromoter-social-reviews-for-woocommerce', false, dirname(plugin_basename(__FILE__), 2) . '/languages/');
     }
 
+    /**
+     * Add settings link to plugin page.
+     *
+     * @param $links
+     * @param $file
+     * @return array|mixed
+     * @since 1.0.0
+     */
     public function plugin_meta_links($links, $file)
     {
         if ($file == plugin_basename(SP_PLUGIN_FILE)) {
             $links = array_merge($links, [
                 '<a href="' . admin_url('admin.php?page=spromoter') . '">' . __('Settings', 'spromoter-social-reviews-for-woocommerce') . '</a>',
-                '<a href="https://reviews.spromoter.com/contact" target="_blank">' . __('Contact', 'spromoter-social-reviews-for-woocommerce') . '</a>',
-                '<a href="https://github.com/bishwajitcadhikary" target="_blank">' . __('Developer', 'spromoter-social-reviews-for-woocommerce') . '</a>',
             ]);
         }
 
         return $links;
     }
 
+    /**
+     * Deactivate the plugin.
+     *
+     * @return void
+     * @since 1.0.0
+     */
     public function deactivate()
     {
-        if (WP_DEBUG) {
-            delete_option('spromoter_settings');
-        }
+        delete_option('spromoter_settings');
     }
 }

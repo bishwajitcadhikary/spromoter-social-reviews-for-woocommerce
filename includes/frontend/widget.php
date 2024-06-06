@@ -1,7 +1,7 @@
 <?php
 namespace WovoSoft\SPromoter\Frontend;
 
-class Widgets
+class Widget
 {
     /**
      * The single instance of the class
@@ -15,7 +15,7 @@ class Widgets
      * Main instance
      *
      */
-    public static function instance(): ?Widgets
+    public static function instance(): ?Widget
     {
         if (null == self::$_instance) {
             self::$_instance = new self();
@@ -45,6 +45,12 @@ class Widgets
         return '<div class="spromoter-product-star-rating" data-product-id="'.$product->get_id().'"></div>';
     }
 
+    /**
+     * Register widgets
+     *
+     * @return void
+     * @since 1.0.0
+     */
     public function register_widgets()
     {
         if (empty($this->settings['app_id']) || empty($this->settings['api_key'])) {
@@ -64,7 +70,15 @@ class Widgets
         }
     }
 
-    public function remove_native_review_system( $open, $post_id )
+    /**
+     * Remove native review system
+     *
+     * @param $open
+     * @param $post_id
+     * @return false|mixed
+     * @since 1.0.0
+     */
+    public function remove_native_review_system($open, $post_id )
     {
         if ( get_post_type( $post_id ) == 'product' ) {
             return false;
@@ -73,6 +87,13 @@ class Widgets
         return $open;
     }
 
+    /**
+     * Show main widget in tab
+     *
+     * @param $tabs
+     * @return mixed
+     * @since 1.0.0
+     */
     public function show_main_widget_in_tab($tabs)
     {
         global $product;
@@ -87,6 +108,12 @@ class Widgets
         return $tabs;
     }
 
+    /**
+     * Show main widget in footer
+     *
+     * @return void
+     * @since 1.0.0
+     */
     public function show_main_widget_in_footer()
     {
         global $product;
@@ -95,6 +122,12 @@ class Widgets
         }
     }
 
+    /**
+     * Render main widget in tab
+     *
+     * @return void
+     * @since 1.0.0
+     */
     public function render_main_widget_in_tab()
     {
         global $product;
@@ -130,6 +163,12 @@ class Widgets
 		</div>";
     }
 
+    /**
+     * Show bottom line widget
+     *
+     * @return void
+     * @since 1.0.0
+     */
     public function show_bottom_line_widget()
     {
         global $product;
@@ -143,17 +182,24 @@ class Widgets
         }
     }
 
+    /**
+     * Enqueue scripts
+     *
+     * @return void
+     * @since 1.0.0
+     */
     public function enqueue_scripts()
     {
-        wp_enqueue_style('spromoter', SP_PLUGIN_URL . '/assets/css/spromoter.css', [], SP_PLUGIN_VERSION);
-        wp_enqueue_script('spromoter', SP_PLUGIN_URL . '/assets/js/spromoter.js', [], SP_PLUGIN_VERSION, true);
+        wp_enqueue_style('spromoter', constant('SP_PLUGIN_URL') . '/assets/css/spromoter.css', [], constant('SP_PLUGIN_VERSION'));
+        wp_enqueue_script('spromoter', constant('SP_PLUGIN_URL') . '/assets/js/spromoter.js', [], constant('SP_PLUGIN_VERSION'), true);
 
         wp_localize_script('spromoter', 'spromoter_settings', array(
             'app_id' => $this->settings['app_id'],
             'bottom_line' => $this->settings['show_bottom_line_widget'],
-            'dev_mode' => defined('WP_SPROMOTER_DEV_MODE')
+            'dev_mode' => constant('SP_DEBUG'),
+            'api_url' => constant('SP_API_URL'),
         ));
     }
 }
 
-Widgets::instance();
+Widget::instance();

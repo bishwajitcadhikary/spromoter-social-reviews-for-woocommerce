@@ -4,7 +4,7 @@ namespace WovoSoft\SPromoter\Admin;
 
 use WC_Order;
 
-class Orders
+class Order
 {
     protected $settings;
 
@@ -13,7 +13,14 @@ class Orders
         $this->settings = settings();
     }
 
-    public function submit_order_data($order)
+    /**
+     * Submit order
+     *
+     * @param $order
+     * @return array
+     * @since 1.0.0
+     */
+    public function submit_order_data($order): array
     {
         do_action('woocommerce_init');
 
@@ -64,7 +71,28 @@ class Orders
         return $orderData;
     }
 
-    public function prepareOrders()
+    /**
+     * Get past orders data
+     *
+     * @return array
+     * @since 1.0.0
+     */
+    public function get_past_orders_data(): array
+    {
+        if (defined('WC_VERSION') && (version_compare(WC_VERSION, '3.0') >= 0)) {
+            return $this->prepare_orders();
+        } else {
+            return $this->prepare_orders_legacy();
+        }
+    }
+
+    /**
+     * Prepare orders data
+     *
+     * @return array
+     * @since 1.0.0
+     */
+    public function prepare_orders(): array
     {
         $configuredAt = $this->settings['configured_at'];
         $orders = wc_get_orders([
@@ -87,14 +115,20 @@ class Orders
                 'total' => $order->get_total(),
                 'data' => $order->get_data(),
                 'platform' => 'woocommerce',
-                'items' => $this->prepareOrderItems($order->get_items())
+                'items' => $this->prepare_order_items($order->get_items())
             ];
         }
 
         return $data;
     }
 
-    private function prepareOrdersLegacy()
+    /**
+     * Prepare orders data for legacy versions
+     *
+     * @return array
+     * @since 1.0.0
+     */
+    private function prepare_orders_legacy(): array
     {
         global $wpdb;
 
@@ -119,14 +153,21 @@ class Orders
                 'total' => $order->order_total,
                 'data' => $order->get_data(),
                 'platform' => 'woocommerce',
-                'items' => $this->prepareOrderItems($order->get_items())
+                'items' => $this->prepare_order_items($order->get_items())
             ];
         }
 
         return $data;
     }
 
-    private function prepareOrderItems($get_items = [])
+    /**
+     * Prepare order items
+     *
+     * @param array $get_items
+     * @return array
+     * @since 1.0.0
+     */
+    private function prepare_order_items(array $get_items = []): array
     {
         $items = [];
         foreach ($get_items as $item) {

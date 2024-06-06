@@ -22,10 +22,6 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-use Automattic\WooCommerce\Utilities\FeaturesUtil;
-use WovoSoft\SPromoter\Install;
-use WovoSoft\SPromoter\Plugin;
-
 defined('ABSPATH') || exit;
 
 if (!defined('SP_PLUGIN_FILE')) {
@@ -33,39 +29,31 @@ if (!defined('SP_PLUGIN_FILE')) {
 }
 
 require_once plugin_dir_path(__FILE__) . 'includes/plugin.php';
-require_once plugin_dir_path(__FILE__) . 'includes/install.php';
-
-
-// Declare compatibility with WooCommerce features.
-add_action('before_woocommerce_init', function () {
-    if (class_exists(FeaturesUtil::class)) {
-        FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
-    }
-});
 
 /**
  * Load and init plugin's instance
  */
-function spromoter_social_reviews_for_woocommerce()
-{
+function spromoter_social_reviews_for_woocommerce() {
     if (!defined('WC_VERSION')) {
         // Show admin notice if WooCommerce is not installed.
-        missing_woocommerce_notice();
+        add_action('admin_notices', 'spromoter_missing_woocommerce_notice');
         return false;
     }
 
-    return Plugin::instance();
+    return WovoSoft\SPromoter\Plugin::instance();
 }
 
 add_action('plugins_loaded', 'spromoter_social_reviews_for_woocommerce');
 
-function missing_woocommerce_notice()
-{
-    add_action('admin_notices', function () {
+/**
+ * Display an admin notice if WooCommerce is not installed
+ */
+function spromoter_missing_woocommerce_notice() {
+    if (current_user_can('activate_plugins')) {
         ?>
         <div class="notice notice-error">
             <p><?php esc_html_e('SPromoter Social Reviews for WooCommerce requires WooCommerce to be installed and active.', 'spromoter-social-reviews-for-woocommerce'); ?></p>
         </div>
         <?php
-    });
+    }
 }

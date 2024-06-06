@@ -9,7 +9,11 @@ class Export
     const ENCLOSURE = '"';
     const DELIMITER = ',';
 
-    public function downloadReviews($file)
+    /**
+     * @param $file
+     * @return string|null
+     */
+    public function download_reviews($file): ?string
     {
         $file_absolute_path = plugin_dir_path(__FILE__) . DIRECTORY_SEPARATOR . $file;
         try {
@@ -38,21 +42,24 @@ class Export
     }
 
     /**
-     * export given reviews to csv file in var/export.
+     * Exports all reviews to a csv file.
+     *
+     * @return array
+     * @since 1.0.0
      */
-    public function exportReviews()
+    public function export_reviews(): array
     {
-        $fp=null;
+        $fp = null;
         try {
             $fileName = 'review_export_' . date("Ymd_His") . '.csv';
             $fp = fopen(plugin_dir_path(__FILE__) . '/' . $fileName, 'w');
             $this->writeHeadRow($fp);
 
             # Load all reviews with their votes
-            $allReviews = $this->getAllReviews();
+            $allReviews = $this->get_all_reviews();
 
             foreach ($allReviews as $fullReview) {
-                $this->writeReview($fullReview, $fp);
+                $this->write_review($fullReview, $fp);
             }
             fclose($fp);
             return array($fileName, null);
@@ -69,24 +76,35 @@ class Export
     }
 
     /**
-     * Writes the head row with the column names in the csv file.
+     * Write the head row to the csv file.
+     *
+     * @param $path
+     * @since 1.0.0
      */
-    protected function writeHeadRow($fp)
+    protected function writeHeadRow($path)
     {
-        fputcsv($fp, $this->getHeadRowValues(), self::DELIMITER, self::ENCLOSURE);
+        fputcsv($path, $this->get_headers(), self::DELIMITER, self::ENCLOSURE);
     }
 
     /**
-     * Writes the row(s) for the given review in the csv file.
-     * A row is added to the csv file for each reviewed item.
+     * Write a review to the csv file.
+     *
+     * @param array $reviews
+     * @param resource $path
+     * @since 1.0.0
      */
-    protected function writeReview($review, $fp)
+    protected function write_review(array $reviews, $path)
     {
-        $review = (array)$review;
-        fputcsv($fp, $review, self::DELIMITER, self::ENCLOSURE);
+        fputcsv($path, $reviews, self::DELIMITER, self::ENCLOSURE);
     }
 
-    protected function getHeadRowValues(): array
+    /**
+     * Get the headers for the csv file.
+     *
+     * @return string[]
+     * @since 1.0.0
+     */
+    protected function get_headers(): array
     {
         return [
             'Review ID',
@@ -107,12 +125,18 @@ class Export
         ];
     }
 
-    protected function getAllReviews(): array
+    /**
+     * Get all reviews from the database.
+     *
+     * @return array
+     * @since 1.0.0
+     */
+    protected function get_all_reviews(): array
     {
         global $wpdb;
         $query = "SELECT
-                    `".$wpdb->prefix."comments`.`comment_ID` AS `review_id`,
-                    `".$wpdb->prefix."comments`.`comment_approved` AS `review_status`,
+                    `" . $wpdb->prefix . "comments`.`comment_ID` AS `review_id`,
+                    `" . $wpdb->prefix . "comments`.`comment_approved` AS `review_status`,
                     comment_post_ID AS product_id, 
                     comment_author AS display_name, 
                     comment_date AS date,
@@ -134,18 +158,18 @@ class Export
 
         foreach ($results as $value) {
             $current_review = [];
-            $review_content = $this->cleanContent($value->review_content);
+            $review_content = $this->clean_content($value->review_content);
             $current_review['Review ID'] = $value->review_id;
-            $current_review['Review Title'] = $this->getFirstWords($review_content);
+            $current_review['Review Title'] = $this->get_first_words($review_content, 5);
             $current_review['Review Body'] = $review_content;
             $current_review['Review Rating'] = $value->review_score;
             $current_review['Review Status'] = $value->review_status ? 'Published' : 'Pending';
             $current_review['Review Creation Date'] = $value->date;
             $current_review['Verified Purchase'] = $value->verified_purchase;
-            $current_review['Reviewer Name'] = $this->cleanContent($value->display_name);
+            $current_review['Reviewer Name'] = $this->clean_content($value->display_name);
             $current_review['Reviewer Email'] = $value->user_email;
             $current_review['Product ID'] = $value->product_id;
-            $current_review['Product Name'] = $this->cleanContent($value->product_title);
+            $current_review['Product Name'] = $this->clean_content($value->product_title);
             $current_review['Product Specs'] = json_encode(get_product_specs(wc_get_product($value->product_id)));
             $current_review['Product URL'] = get_permalink($value->product_id);
             $current_review['Product Image URL'] = get_product_image_url($value->product_id);
@@ -156,17 +180,32 @@ class Export
         return $all_reviews;
     }
 
-    private function cleanContent($content): string
+    /**
+     * Clean the content of the review.
+     *
+     * @param $content
+     * @return string
+     * @since 1.0.0
+     */
+    private function clean_content($content): string
     {
-        $content = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $content);
+        $content = preg_replace('/<br(\s*)?\/?>/i', "\n", $content);
         return html_entity_decode(strip_tags(strip_shortcodes($content)));
     }
 
-    private function getFirstWords($content = ''): string
+    /**
+     * Get the first 5 words of the review.
+     *
+     * @param string $content
+     * @param int $count
+     * @return string
+     * @since 1.0.0
+     */
+    private function get_first_words(string $content = '', int $count = 6): string
     {
         $words = str_word_count($content, 1);
-        if (count($words) > 5) {
-            return join(" ", array_slice($words, 0, 5));
+        if (count($words) > $count) {
+            return join(" ", array_slice($words, 0, $count));
         } else {
             return join(" ", $words);
         }
