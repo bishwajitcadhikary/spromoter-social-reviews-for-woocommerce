@@ -99,7 +99,7 @@ class Order
             'limit' => -1,
             'status' => ['completed', 'processing'],
             'type' => 'shop_order',
-            'date_created' => '<=' . date('Y-m-d', $configuredAt)
+            'date_created' => '<=' . gmdate('Y-m-d', $configuredAt)
         ]);
 
         $data = [];
@@ -132,12 +132,18 @@ class Order
     {
         global $wpdb;
 
-        $orders = $wpdb->get_results("
-            SELECT * FROM {$wpdb->prefix}posts
-            WHERE post_type = 'shop_order'
-            AND post_status IN ('wc-completed', 'wc-processing')
-            AND post_date >= '" . date('Y-m-d', strtotime('-1 month')) . "'
-        ");
+        $one_month_ago = gmdate('Y-m-d', strtotime('-1 month'));
+
+        $orders = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT * FROM {$wpdb->prefix}posts
+                WHERE post_type = 'shop_order'
+                AND post_status IN ('wc-completed', 'wc-processing')
+                AND post_date >= %s",
+                $one_month_ago
+            )
+        );
+
 
         $data = [];
         foreach ($orders as $order) {

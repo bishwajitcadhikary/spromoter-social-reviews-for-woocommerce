@@ -36,7 +36,7 @@ class Setting
     public function show_page()
     {
         if (empty($this->settings['app_id']) && empty($this->settings['api_key']) && isset($_GET['view']) && $_GET['view'] == 'login') {
-            if (!empty($_POST) && $this->login()) {
+            if (!empty($_POST) && isset($_POST['_wpnonce_spromoter_login_form']) && wp_verify_nonce($_POST['_wpnonce_spromoter_login_form'], 'spromoter_login_form') && $this->login()) {
                 wp_redirect(admin_url('admin.php?page=spromoter'));
                 exit;
             }
@@ -78,7 +78,9 @@ class Setting
      */
     private function login(): bool
     {
-        wp_verify_nonce($_POST['_wpnonce'], 'spromoter_login_form');
+        if (empty($_POST['_wpnonce_spromoter_login_form']) || !wp_verify_nonce($_POST['_wpnonce_spromoter_login_form'], 'spromoter_login_form')) {
+            return false;
+        }
 
         if (empty($_POST['app_id'])) {
             add_settings_error('app_id', 'app_id', 'APP ID is required');
@@ -218,7 +220,7 @@ class Setting
      */
     private function export()
     {
-        wp_verify_nonce($_POST['_wpnonce'], 'spromoter_export_form');
+        wp_verify_nonce($_POST['_wpnonce_spromoter_export_form'], 'spromoter_export_form');
 
         $exporter = new Export();
 
@@ -227,6 +229,8 @@ class Setting
         if (is_null($error)){
             $exporter->download_reviews($file_name);
             exit();
+        } else {
+            add_settings_error('spromoter_messages', 'export_reviews', $error);
         }
     }
 

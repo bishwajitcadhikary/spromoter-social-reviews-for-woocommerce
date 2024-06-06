@@ -145,7 +145,7 @@ class Widget
 			data-spromoter-product-lang='" .$product_data['lang']. "'
 			data-spromoter-product-shop-domain='" .$product_data['shop_domain']. "'
 			data-spromoter-product-app-id='" .$product_data['app_id']. "'
-			data-spromoter-product-specs='" .json_encode($product_data['specs']). "'
+			data-spromoter-product-specs='" .wp_json_encode($product_data['specs']). "'
 			>
 			<div class='spromoter-total-review-show-wrap'>
 				<div class='powered-by-spromoter'>Powered by - Spromoter</div>

@@ -93,7 +93,7 @@ function get_product_data(WC_Product $product): array
     $settings = settings();
     $product_data = [
         'app_id' => esc_attr($settings['app_id']),
-        'shop_domain' => esc_attr(parse_url(get_site_url(), PHP_URL_HOST)),
+        'shop_domain' => esc_attr(wp_parse_url(get_site_url(), PHP_URL_HOST)),
         'url' => esc_url(get_permalink($product->get_id())),
         'lang' => esc_attr('en'),
         'description' => esc_attr(wp_strip_all_tags($product->get_description())),
@@ -127,3 +127,4 @@ function get_product_specs(WC_Product $product): array
         'mpn' => $product->get_attribute('mpn') ?: null,
     ];
 }
+

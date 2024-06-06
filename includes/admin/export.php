@@ -30,7 +30,7 @@ class Export
                 flush();
                 readfile($file_absolute_path);
                 //delete the file after it was downloaded.
-                unlink($file_absolute_path);
+                wp_delete_file($file_absolute_path);
                 return null;
             }
         } catch (Exception $e) {
@@ -51,7 +51,7 @@ class Export
     {
         $fp = null;
         try {
-            $fileName = 'review_export_' . date("Ymd_His") . '.csv';
+            $fileName = 'review_export_' . gmdate("Ymd_His") . '.csv';
             $fp = fopen(plugin_dir_path(__FILE__) . '/' . $fileName, 'w');
             $this->writeHeadRow($fp);
 
@@ -67,7 +67,7 @@ class Export
             //delete the file if it was created.
             if (isset($fp)) {
                 fclose($fp);
-                unlink(plugin_dir_path(__FILE__) . '/' . $fileName);
+                wp_delete_file(plugin_dir_path(__FILE__) . '/' . $fileName);
             }
 
             error_log($e->getMessage());
@@ -134,7 +134,8 @@ class Export
     protected function get_all_reviews(): array
     {
         global $wpdb;
-        $query = "SELECT
+        $results = $wpdb->get_results("
+                SELECT
                     `" . $wpdb->prefix . "comments`.`comment_ID` AS `review_id`,
                     `" . $wpdb->prefix . "comments`.`comment_approved` AS `review_status`,
                     comment_post_ID AS product_id, 
@@ -151,9 +152,9 @@ class Export
                 INNER JOIN `" . $wpdb->prefix . "posts` ON `" . $wpdb->prefix . "posts`.`ID` = `" . $wpdb->prefix . "comments`.`comment_post_ID` 
                 INNER JOIN `" . $wpdb->prefix . "commentmeta` ON `" . $wpdb->prefix . "commentmeta`.`comment_id` = `" . $wpdb->prefix . "comments`.`comment_ID`
                 LEFT JOIN `" . $wpdb->prefix . "woocommerce_order_items` AS oi ON oi.order_item_id = `" . $wpdb->prefix . "comments`.`comment_post_ID`
-                WHERE `post_type` = 'product' AND meta_key='rating'";
+                WHERE `post_type` = 'product' AND meta_key='rating'
+        ");
 
-        $results = $wpdb->get_results($query);
         $all_reviews = [];
 
         foreach ($results as $value) {
@@ -170,7 +171,7 @@ class Export
             $current_review['Reviewer Email'] = $value->user_email;
             $current_review['Product ID'] = $value->product_id;
             $current_review['Product Name'] = $this->clean_content($value->product_title);
-            $current_review['Product Specs'] = json_encode(get_product_specs(wc_get_product($value->product_id)));
+            $current_review['Product Specs'] = wp_json_encode(get_product_specs(wc_get_product($value->product_id)));
             $current_review['Product URL'] = get_permalink($value->product_id);
             $current_review['Product Image URL'] = get_product_image_url($value->product_id);
             $current_review['Review Images'] = '';
@@ -190,7 +191,7 @@ class Export
     private function clean_content($content): string
     {
         $content = preg_replace('/<br(\s*)?\/?>/i', "\n", $content);
-        return html_entity_decode(strip_tags(strip_shortcodes($content)));
+        return html_entity_decode(wp_strip_all_tags(strip_shortcodes($content)));
     }
 
     /**
