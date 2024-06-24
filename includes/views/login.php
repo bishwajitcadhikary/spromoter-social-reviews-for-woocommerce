@@ -14,7 +14,7 @@ defined('ABSPATH') || exit;
                     <p class="mb-4">Make your review management easy!</p>
 
                     <form id="spromoterLoginForm" method="POST">
-                        <?php wp_nonce_field( 'spromoter_login_form' ); ?>
+                        <?php wp_nonce_field( 'spromoter_login' , '_wpnonce_spromoter_login_form'); ?>
                         <div class="mb-3">
                             <label for="app_id" class="spromoter-form-label mb-2">App ID</label>
                             <input
@@ -24,7 +24,7 @@ defined('ABSPATH') || exit;
                                     name="app_id"
                                     placeholder="Enter your app id"
                                     autofocus
-                                    value=""
+                                    value="<?php echo esc_attr($_POST['app_id'] ?? ''); ?>"
                                     required
                                     minlength="36"
                             />
@@ -39,7 +39,7 @@ defined('ABSPATH') || exit;
                                     id="api_key"
                                     name="api_key"
                                     placeholder="Enter your api key"
-                                    value=""
+                                    value="<?php echo esc_attr($_POST['api_key'] ?? ''); ?>"
                                     required
                             />
 

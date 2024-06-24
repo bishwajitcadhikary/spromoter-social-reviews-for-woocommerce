@@ -51,7 +51,7 @@ class Api
                 'Accept' => 'application/json',
                 'X-App-ID' => $this->app_id,
             ], $headers),
-            'sslverify' => true,
+            'sslverify' => !constant('SP_DEBUG'),
         ];
 
         // Add query parameters for GET requests
@@ -76,12 +76,12 @@ class Api
         }
 
         // Check HTTP status code
-        $http_code = wp_remote_retrieve_response_code($response);
-        if ($http_code >= 400) {
-            // Handle HTTP error
-            error_log('HTTP error: ' . $http_code);
-            return false;
-        }
+//        $http_code = wp_remote_retrieve_response_code($response);
+//        if ($http_code >= 400) {
+//            // Handle HTTP error
+//            error_log('HTTP error: ' . $http_code);
+//            return false;
+//        }
 
         // Parse JSON response
         $body = wp_remote_retrieve_body($response);

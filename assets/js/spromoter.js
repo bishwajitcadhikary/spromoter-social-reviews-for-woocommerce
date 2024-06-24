@@ -380,6 +380,8 @@ Promise.all([...scriptPromises, ...stylePromises])
         let page = 1;
         let loadReviews = sendRequest('reviews', 'POST', {
             product_id: productId,
+            rating: 0,
+            order_by: 'latest',
             page: page,
             specs: productSpecs
         });
@@ -453,7 +455,8 @@ Promise.all([...scriptPromises, ...stylePromises])
                             rating: ratingFilter.value,
                             order_by: orderByFilter.value,
                             product_id: productId,
-                            page: ++page
+                            page: ++page,
+                            specs: productSpecs
                         }
 
                         let loadReviews = sendRequest('reviews', 'POST', data);

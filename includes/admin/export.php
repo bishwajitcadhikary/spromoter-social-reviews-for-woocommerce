@@ -107,21 +107,15 @@ class Export
     protected function get_headers(): array
     {
         return [
-            'Review ID',
+            'Item ID',
+            'Item UPC',
+            'SKU',
             'Review Title',
             'Review Body',
             'Review Rating',
-            'Review Status',
-            'Review Creation Date',
-            'Verified Purchase',
-            'Reviewer Name',
-            'Reviewer Email',
-            'Product ID',
-            'Product Name',
-            'Product Specs',
-            'Product URL',
-            'Product Image URL',
-            'Review Images',
+            'Review Created Date',
+            'Review User Name',
+            'URL link',
         ];
     }
 
@@ -168,22 +162,17 @@ class Export
         foreach ($results as $value) {
             $current_review = [];
             $review_content = $this->clean_content($value->review_content);
-            $current_review['Review ID'] = $value->review_id;
+            $current_review['Item ID'] = $value->product_id;
+            $current_review['Item UPC'] = get_post_meta($value->product_id, '_upc', true);
+            $current_review['SKU'] = get_post_meta($value->product_id, '_sku', true);
+
             $current_review['Review Title'] = $this->get_first_words($review_content, 5);
             $current_review['Review Body'] = $review_content;
             $current_review['Review Rating'] = $value->review_score;
-            $current_review['Review Status'] = $value->review_status ? 'Published' : 'Pending';
-            $current_review['Review Creation Date'] = $value->date;
-            $current_review['Verified Purchase'] = $value->verified_purchase;
-            $current_review['Reviewer Name'] = $this->clean_content($value->display_name);
-            $current_review['Reviewer Email'] = $value->user_email;
-            $current_review['Product ID'] = $value->product_id;
-            $current_review['Product Name'] = $this->clean_content($value->product_title);
-            $current_review['Product Specs'] = wp_json_encode(get_product_specs(wc_get_product($value->product_id)));
-            $current_review['Product URL'] = get_permalink($value->product_id);
-            $current_review['Product Image URL'] = get_product_image_url($value->product_id);
-            $current_review['Review Images'] = '';
 
+            $current_review['Review Created Date'] = $value->date;
+            $current_review['Review User Name'] = $this->clean_content($value->display_name);
+            $current_review['URL link'] = get_permalink($value->product_id);
             $all_reviews[] = $current_review;
         }
 

@@ -159,7 +159,7 @@ final class Plugin
      */
     private function api_url(): string
     {
-        return $this->is_dev_mode() ? 'https://api.spromoter.wovosoft.xyz/v1/' : 'https://api.spromoter.com/v1/';
+        return $this->is_dev_mode() ? 'https://api.spromoter.test/v1/' : 'https://api.spromoter.com/v1/';
     }
 
     /**

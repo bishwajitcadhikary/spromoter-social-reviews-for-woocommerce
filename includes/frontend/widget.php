@@ -145,7 +145,7 @@ class Widget
 			data-spromoter-product-lang='" .esc_html($product_data['lang']). "'
 			data-spromoter-product-shop-domain='" .esc_html($product_data['shop_domain']). "'
 			data-spromoter-product-app-id='" .esc_html($product_data['app_id']). "'
-			data-spromoter-product-specs='" .wp_json_encode(esc_html($product_data['specs'])). "'
+			data-spromoter-product-specs='" .esc_html(wp_json_encode($product_data['specs'])). "'
 			>
 			<div class='spromoter-total-review-show-wrap'>
 				<div class='powered-by-spromoter'>Powered by - Spromoter</div>
@@ -196,7 +196,6 @@ class Widget
         wp_localize_script('spromoter', 'spromoter_settings', array(
             'app_id' => $this->settings['app_id'],
             'bottom_line' => $this->settings['show_bottom_line_widget'],
-            'dev_mode' => constant('SP_DEBUG'),
             'api_url' => constant('SP_API_URL'),
         ));
     }

@@ -76,7 +76,7 @@ function get_connection_status(): bool
 
     $api = new WovoSoft\SPromoter\Admin\Api($settings['api_key'], $settings['app_id']);
 
-    $result = $api->send_request('check-credentials', 'POST');
+    $result = $api->send_request('stores/me');
 
     return isset($result['status']) && $result['status'] === 'success';
 }

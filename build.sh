@@ -9,6 +9,12 @@ current_version=$(grep -oE "Version:[[:space:]]+[0-9.]+" "$php_file" | awk '{pri
 # Increase the version number (assuming a standard version format like x.y.z)
 new_version=$(echo "$current_version" | awk -F '.' '{print $1"."$2"."$3 + 1}')
 
+# Define the readme file
+readme_file="readme.txt"
+
+# Update the version in the readme file
+sed -i '' "s/Stable tag:[[:space:]]*$current_version/Stable tag: $new_version/" "$readme_file"
+
 # Update the version in the PHP file
 sed -i '' "s/Version:[[:space:]]*$current_version/Version:           $new_version/" "$php_file"
 

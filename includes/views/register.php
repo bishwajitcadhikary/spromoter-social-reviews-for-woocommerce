@@ -14,7 +14,7 @@ defined('ABSPATH') || exit;
                     <p class="mb-4">Make your review management easy!</p>
 
                     <form id="spromoterRegisterForm" method="POST">
-                        <?php wp_nonce_field( 'spromoter_register_form' ); ?>
+                        <?php wp_nonce_field( 'spromoter_register' , '_wpnonce_spromoter_register_form'); ?>
 
                         <div class="mb-3">
                             <label for="first_name" class="spromoter-form-label mb-2">First Name</label>

@@ -25,4 +25,3 @@ jobs:
         uses: ncipollo/release-action@v1.13.0
         with:
           artifacts: "spromoter-social-reviews-for-woocommerce.zip"
-          token: ${{ secrets.TOKEN }}

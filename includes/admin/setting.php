@@ -16,7 +16,7 @@ class Setting
 
     /**
      * Add admin menus
-     * 
+     *
      * @return void
      * @since 1.0.0
      */
@@ -29,15 +29,15 @@ class Setting
 
     /**
      * Show admin page
-     * 
+     *
      * @return void
      * @since 1.0.0
      */
     public function show_page()
     {
         if (empty($this->settings['app_id']) && empty($this->settings['api_key']) && isset($_GET['view']) && $_GET['view'] == 'login') {
-            if (!empty($_POST) && isset($_POST['_wpnonce_spromoter_login_form']) && wp_verify_nonce($_POST['_wpnonce_spromoter_login_form'], 'spromoter_login_form') && $this->login()) {
-                wp_redirect(admin_url('admin.php?page=spromoter'));
+            if (!empty($_POST) && isset($_POST['_wpnonce_spromoter_login_form']) && $this->login()) {
+                wp_redirect(admin_url('admin.php?page=spromoter&view=login'));
                 exit;
             }
 
@@ -72,13 +72,13 @@ class Setting
 
     /**
      * Authenticate user
-     * 
+     *
      * @return bool
      * @since 1.0.0
      */
     private function login(): bool
     {
-        if (empty($_POST['_wpnonce_spromoter_login_form']) || !wp_verify_nonce($_POST['_wpnonce_spromoter_login_form'], 'spromoter_login_form')) {
+        if (!wp_verify_nonce($_POST['_wpnonce_spromoter_login_form'], 'spromoter_login')) {
             return false;
         }
 
@@ -95,12 +95,16 @@ class Setting
         }
 
         // Verify credentials with SPromoter
-        $api = new Api($_POST['api_key']);
-        $result = $api->send_request('check-credentials', 'POST', array(
-            'app_id' => $_POST['app_id'],
-        ));
+        $api = new Api($_POST['api_key'], $_POST['app_id']);
+        $result = $api->send_request('stores/me');
 
-        if (isset($result['status']) && $result['status'] == 'error' || !$result) {
+        if (isset($result) && $result['status'] == 'success'){
+            $this->settings['app_id'] = $_POST['app_id'];
+            $this->settings['api_key'] = $_POST['api_key'];
+            update_option('spromoter_settings', $this->settings);
+
+            return true;
+        }elseif (isset($result) && $result['status'] !== 'success'){
             if ($result['message'] == 'Unauthenticated'){
                 add_settings_error('api_key', 'api_key', 'Please enter valid api key');
             }
@@ -111,23 +115,20 @@ class Setting
 
             return false;
         }else{
-            $this->settings['app_id'] = $_POST['app_id'];
-            $this->settings['api_key'] = $_POST['api_key'];
-            update_option('spromoter_settings', $this->settings);
-
-            return true;
+            add_settings_error('api_key', 'api_key', 'Please enter valid api key');
+            return false;
         }
     }
 
     /**
      * Register user
-     * 
+     *
      * @return bool
      * @since 1.0.0
      */
     private function register(): bool
     {
-        wp_verify_nonce($_POST['_wpnonce'], 'spromoter_register_form');
+        wp_verify_nonce($_POST['_wpnonce'], '_wpnonce_spromoter_login_form');
         $fields = ['first_name', 'last_name', 'email', 'password', 'password_confirmation'];
         foreach ($fields as $field) {
             if (empty($_POST[$field])) {
@@ -170,7 +171,7 @@ class Setting
 
     /**
      * Update settings
-     * 
+     *
      * @return void
      * @since 1.0.0
      */
@@ -214,7 +215,7 @@ class Setting
 
     /**
      * Export reviews
-     * 
+     *
      * @return void
      * @since 1.0.0
      */
@@ -236,7 +237,7 @@ class Setting
 
     /**
      * Submit order
-     * 
+     *
      * @param $order_id
      * @return void
      * @since 1.0.0
