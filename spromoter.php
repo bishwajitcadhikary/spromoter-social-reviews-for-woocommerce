@@ -4,16 +4,16 @@
  *
  * @package           SPromoter
  * @author            SPromoter Social Reviews for WooCommerce
- * @copyright         2024 WovoSoft
+ * @copyright         2024 SPromoter
  * @license           GPL-2.0-or-later
  *
  * @wordpress-plugin
  * Plugin Name:       SPromoter Social Reviews for WooCommerce
  * Plugin URI:        https://reviews.spromoter.com/integrations/woocommerce
  * Description:       SPromoter Social Reviews for WooCommerce helps you to collect and display reviews from your customers on your WooCommerce store.
- * Version:           1.1.6
- * Requires at least: 5.2
- * Requires PHP:      7.2
+ * Version:           1.0.3
+ * Requires at least: 5.3
+ * Requires PHP:      7.4
  * Author:            SPromoter
  * Author URI:        https://spromoter.com
  * Text Domain:       spromoter-social-reviews-for-woocommerce
@@ -22,10 +22,6 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-use Automattic\WooCommerce\Utilities\FeaturesUtil;
-use WovoSoft\SPromoter\Install;
-use WovoSoft\SPromoter\Plugin;
-
 defined('ABSPATH') || exit;
 
 if (!defined('SP_PLUGIN_FILE')) {
@@ -33,39 +29,31 @@ if (!defined('SP_PLUGIN_FILE')) {
 }
 
 require_once plugin_dir_path(__FILE__) . 'includes/plugin.php';
-require_once plugin_dir_path(__FILE__) . 'includes/install.php';
-
-
-// Declare compatibility with WooCommerce features.
-add_action('before_woocommerce_init', function () {
-    if (class_exists(FeaturesUtil::class)) {
-        FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
-    }
-});
 
 /**
  * Load and init plugin's instance
  */
-function spromoter_social_reviews_for_woocommerce()
-{
+function spromoter_social_reviews_for_woocommerce() {
     if (!defined('WC_VERSION')) {
         // Show admin notice if WooCommerce is not installed.
-        missing_woocommerce_notice();
+        add_action('admin_notices', 'spromoter_missing_woocommerce_notice');
         return false;
     }
 
-    return Plugin::instance();
+    return WovoSoft\SPromoter\Plugin::instance();
 }
 
 add_action('plugins_loaded', 'spromoter_social_reviews_for_woocommerce');
 
-function missing_woocommerce_notice()
-{
-    add_action('admin_notices', function () {
+/**
+ * Display an admin notice if WooCommerce is not installed
+ */
+function spromoter_missing_woocommerce_notice() {
+    if (current_user_can('activate_plugins')) {
         ?>
         <div class="notice notice-error">
             <p><?php esc_html_e('SPromoter Social Reviews for WooCommerce requires WooCommerce to be installed and active.', 'spromoter-social-reviews-for-woocommerce'); ?></p>
         </div>
         <?php
-    });
+    }
 }

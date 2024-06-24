@@ -7,57 +7,84 @@ namespace WovoSoft\SPromoter\Admin;
 class Api
 {
 
-    protected $api_url;
+    /**
+     * API URL
+     * @var string
+     */
+    protected string $api_url;
+
+    /**
+     * API Key
+     * @var mixed|null
+     */
     protected $api_key;
+
+    /**
+     * App ID
+     * @var mixed|null
+     */
     protected $app_id;
 
-    public function __construct($api_key = null, $app_id = null) {
+    public function __construct($api_key = null, $app_id = null)
+    {
+        $this->api_url = constant('SP_API_URL');
         $this->api_key = $api_key;
         $this->app_id = $app_id;
-
-        if (defined('WP_SPROMOTER_DEV_MODE')) {
-            $this->api_url = 'http://api.spromoter.test/v1/';
-        } else {
-            $this->api_url = 'https://api.spromoter.com/v1/';
-        }
     }
 
-    public function sendRequest( $endpoint, $method = 'GET', $body = [] , $headers = []) {
-        $ch = curl_init();
+    /**
+     * Send request to API
+     * @param $endpoint
+     * @param string $method
+     * @param array $body
+     * @param array $headers
+     * @return false|array
+     * @since 1.0.0
+     */
+    public function send_request($endpoint, string $method = 'GET', array $body = [], array $headers = [])
+    {
+        // Prepare the request arguments
+        $args = [
+            'headers' => array_merge([
+                'Authorization' => 'Bearer ' . $this->api_key,
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'X-App-ID' => $this->app_id,
+            ], $headers),
+            'sslverify' => true,
+        ];
 
+        // Add query parameters for GET requests
         if ($method == 'GET') {
             $endpoint .= '?' . http_build_query($body);
         }
 
-        $headers = array_merge([
-            'Authorization: Bearer ' . $this->api_key,
-            'Content-Type: application/json',
-            'Accept: application/json',
-            'X-App-ID: '. $this->app_id,
-        ], $headers);
-
-
-        curl_setopt($ch, CURLOPT_URL, $this->api_url . $endpoint);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        if (WP_DEBUG) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        }
-
+        // Add body for POST requests
         if ($method == 'POST') {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
-            curl_setopt($ch, CURLOPT_POST, 1);
+            $args['method'] = 'POST';
+            $args['body'] = wp_json_encode($body);
         }
 
-        $result = curl_exec($ch);
+        // Perform the request
+        $response = wp_remote_get($this->api_url . $endpoint, $args);
 
-        if (curl_errno($ch)) {
+        // Check for errors
+        if (is_wp_error($response)) {
+            // Handle WP error
+            error_log('WP_Error: ' . $response->get_error_message());
             return false;
         }
 
-        curl_close($ch);
+        // Check HTTP status code
+        $http_code = wp_remote_retrieve_response_code($response);
+        if ($http_code >= 400) {
+            // Handle HTTP error
+            error_log('HTTP error: ' . $http_code);
+            return false;
+        }
 
-        return json_decode($result, true);
+        // Parse JSON response
+        $body = wp_remote_retrieve_body($response);
+        return json_decode($body, true);
     }
 }

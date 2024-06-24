@@ -60,7 +60,7 @@ Promise.all([...scriptPromises, ...stylePromises])
     .then(() => {
 
         function sendRequest(endpoint, method = 'POST', body = null, headers = {}) {
-            let baseURL = spromoter_settings.dev_mode ? '//api.spromoter.test/v1/' : 'https://api.spromoter.com/v1/';
+            let baseURL = spromoter_settings.api_url;
             let appId = spromoter_settings.app_id;
 
             headers = {
@@ -170,15 +170,15 @@ Promise.all([...scriptPromises, ...stylePromises])
                 <div class='spromoter-rating-wrap'>
                     <div class='spromoter-rating-text'>How was your experience with this product?</div>
                     <div class='spromoter-rating'>
-                        <input type='radio' name='spromoter_form_rating' id='spromoter_form_rating_one' value='1' checked />
+                        <input type='radio' name='spromoter_form_rating' id='spromoter_form_rating_one' value='1'/>
                         <label for='spromoter_form_rating_one'><i class='bi bi-star-fill'></i></label>
                         <input type='radio' name='spromoter_form_rating' id='spromoter_form_rating_two' value='2' />
                         <label for='spromoter_form_rating_two'><i class='bi bi-star-fill'></i></label>
-                        <input type='radio' name='spromoter_form_rating' id='spromoter_form_rating_three' value='3' />
+                        <input type='radio' name='spromoter_form_rating' id='spromoter_form_rating_three' value='3'/>
                         <label for='spromoter_form_rating_three'><i class='bi bi-star-fill'></i></label>
-                        <input type='radio' name='spromoter_form_rating' id='spromoter_form_rating_four' value='4' />
+                        <input type='radio' name='spromoter_form_rating' id='spromoter_form_rating_four' value='4'/>
                         <label for='spromoter_form_rating_four'><i class='bi bi-star-fill'></i></label>
-                        <input type='radio' name='spromoter_form_rating' id='spromoter_form_rating_five' value='5' />
+                        <input type='radio' name='spromoter_form_rating' id='spromoter_form_rating_five' value='5' checked/>
                         <label for='spromoter_form_rating_five'><i class='bi bi-star-fill'></i></label>
                     </div>
                 </div>

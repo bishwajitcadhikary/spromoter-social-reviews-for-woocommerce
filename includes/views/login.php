@@ -8,27 +8,25 @@ defined('ABSPATH') || exit;
                 <div class="card-body">
                     <!-- Logo -->
                     <a href="https://reviews.spromoter.com" class="spromoter-brand" target="_blank" rel="noopener">
-                        <img src="<?php echo assets_path('images/logo.png'); ?>" alt="SPromoter">
+                        <img src="<?php echo esc_url(assets_path('images/logo.png')); ?>" alt="SPromoter">
                     </a>
                     <h2 class="mb-2">Get started with SPromoter</h2>
                     <p class="mb-4">Make your review management easy!</p>
 
-<!--                    show errors-->
-
-
                     <form id="spromoterLoginForm" method="POST">
                         <?php wp_nonce_field( 'spromoter_login_form' ); ?>
                         <div class="mb-3">
-                            <label for="app_id" class="spromoter-form-label mb-2">APP ID</label>
+                            <label for="app_id" class="spromoter-form-label mb-2">App ID</label>
                             <input
                                     type="text"
                                     class="spromoter-form-input"
                                     id="app_id"
                                     name="app_id"
-                                    placeholder="Enter app id"
+                                    placeholder="Enter your app id"
                                     autofocus
-
                                     value=""
+                                    required
+                                    minlength="36"
                             />
 
                             <?php settings_errors('app_id', true); ?>
@@ -40,8 +38,9 @@ defined('ABSPATH') || exit;
                                     class="spromoter-form-input"
                                     id="api_key"
                                     name="api_key"
-                                    placeholder="Enter api key"
+                                    placeholder="Enter your api key"
                                     value=""
+                                    required
                             />
 
                             <?php settings_errors('api_key'); ?>

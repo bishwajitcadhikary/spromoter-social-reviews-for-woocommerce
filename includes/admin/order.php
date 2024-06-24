@@ -4,7 +4,7 @@ namespace WovoSoft\SPromoter\Admin;
 
 use WC_Order;
 
-class Orders
+class Order
 {
     protected $settings;
 
@@ -13,7 +13,14 @@ class Orders
         $this->settings = settings();
     }
 
-    public function submit_order_data($order)
+    /**
+     * Submit order
+     *
+     * @param $order
+     * @return array
+     * @since 1.0.0
+     */
+    public function submit_order_data($order): array
     {
         do_action('woocommerce_init');
 
@@ -64,14 +71,20 @@ class Orders
         return $orderData;
     }
 
-    public function prepareOrders()
+    /**
+     * Get past orders data
+     *
+     * @return array
+     * @since 1.0.0
+     */
+    public function get_past_orders_data(): array
     {
         $configuredAt = $this->settings['configured_at'];
         $orders = wc_get_orders([
             'limit' => -1,
             'status' => ['completed', 'processing'],
             'type' => 'shop_order',
-            'date_created' => '<=' . date('Y-m-d', $configuredAt)
+            'date_created' => '<=' . gmdate('Y-m-d', $configuredAt)
         ]);
 
         $data = [];
@@ -87,46 +100,21 @@ class Orders
                 'total' => $order->get_total(),
                 'data' => $order->get_data(),
                 'platform' => 'woocommerce',
-                'items' => $this->prepareOrderItems($order->get_items())
+                'items' => $this->prepare_order_items($order->get_items())
             ];
         }
 
         return $data;
     }
 
-    private function prepareOrdersLegacy()
-    {
-        global $wpdb;
-
-        $orders = $wpdb->get_results("
-            SELECT * FROM {$wpdb->prefix}posts
-            WHERE post_type = 'shop_order'
-            AND post_status IN ('wc-completed', 'wc-processing')
-            AND post_date >= '" . date('Y-m-d', strtotime('-1 month')) . "'
-        ");
-
-        $data = [];
-        foreach ($orders as $order) {
-            $order = new WC_Order($order->ID);
-            $data[] = [
-                $order_id = $order->get_id(),
-                'customer_name' => $order->billing_first_name . ' ' . $order->billing_last_name,
-                'customer_email' => $order->billing_email,
-                'order_id' => "$order_id",
-                'order_date' => $order->order_date,
-                'currency' => $order->order_currency,
-                'status' => $order->status,
-                'total' => $order->order_total,
-                'data' => $order->get_data(),
-                'platform' => 'woocommerce',
-                'items' => $this->prepareOrderItems($order->get_items())
-            ];
-        }
-
-        return $data;
-    }
-
-    private function prepareOrderItems($get_items = [])
+    /**
+     * Prepare order items
+     *
+     * @param array $get_items
+     * @return array
+     * @since 1.0.0
+     */
+    private function prepare_order_items(array $get_items = []): array
     {
         $items = [];
         foreach ($get_items as $item) {

@@ -4,7 +4,7 @@
 
 <div class="spromoter-container">
     <div class="spromoter-bg-shape">
-        <img src="<?php echo assets_path('images/shape.png'); ?>" alt="SPromoter">
+        <img src="<?php echo esc_url(assets_path('images/shape.png')); ?>" alt="SPromoter">
     </div>
     <div class="spromoter-wrapper">
         <div class="spromoter-inner">
@@ -19,7 +19,7 @@
                         <div>
                             <!-- Logo -->
                             <a href="#" class="spromoter-brand">
-                                <img src="<?php echo assets_path('images/logo.png'); ?>" alt="SPromoter">
+                                <img src="<?php echo esc_url(assets_path('images/logo.png')); ?>" alt="SPromoter">
                             </a>
                             <h2>
                                 <?php esc_html_e('Configure your settings!', 'spromoter-social-reviews-for-woocommerce'); ?>
@@ -47,7 +47,7 @@
                     </div>
 
                     <form id="spromoterSettingsForm" method="POST">
-                        <?= wp_nonce_field('spromoter_settings_form'); ?>
+                        <?php wp_nonce_field('spromoter_settings_form', '_wpnonce_spromoter_settings_form'); ?>
                         <input type="hidden" name="type" value="update">
 
                         <div class="mb-3">
@@ -84,22 +84,22 @@
                         <div class="mb-3">
                             <label for="order_status" class="spromoter-form-label mb-2">Order Status</label>
                             <select name="order_status" id="order_status" class="spromoter-form-input spromoter-form-select">
-                                <option value="completed" <?= selected('completed', esc_html(settings('order_status')), false) ?>>
+                                <option value="completed" <?php echo selected('completed', esc_html(settings('order_status')), false) ?>>
                                     <?php esc_html_e('Completed', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
-                                <option value="processing" <?= selected('processing', esc_html(settings('order_status')), false) ?>>
+                                <option value="processing" <?php echo selected('processing', esc_html(settings('order_status')), false) ?>>
                                     <?php esc_html_e('Processing', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
-                                <option value="on-hold" <?= selected('on-hold', esc_html(settings('order_status')), false) ?>>
+                                <option value="on-hold" <?php echo selected('on-hold', esc_html(settings('order_status')), false) ?>>
                                     <?php esc_html_e('On Hold', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
-                                <option value="canceled" <?= selected('canceled', esc_html(settings('order_status')), false) ?>>
+                                <option value="canceled" <?php echo selected('canceled', esc_html(settings('order_status')), false) ?>>
                                     <?php esc_html_e('Canceled', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
-                                <option value="refunded" <?= selected('refunded', esc_html(settings('order_status')), false) ?>>
+                                <option value="refunded" <?php echo selected('refunded', esc_html(settings('order_status')), false) ?>>
                                     <?php esc_html_e('Refunded', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
-                                <option value="failed" <?= selected('failed', esc_html(settings('order_status')), false) ?>>
+                                <option value="failed" <?php echo selected('failed', esc_html(settings('order_status')), false) ?>>
                                     <?php esc_html_e('Failed', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
                             </select>
@@ -108,10 +108,10 @@
                         <div class="mb-3">
                             <label for="review_show_in" class="spromoter-form-label mb-2"><?php esc_html_e('Review Show In', 'spromoter-social-reviews-for-woocommerce'); ?></label>
                             <select name="review_show_in" id="review_show_in" class="spromoter-form-input spromoter-form-select">
-                                <option value="tab" <?= selected('tab', esc_html(settings('review_show_in')), false) ?>>
+                                <option value="tab" <?php echo selected('tab', esc_html(settings('review_show_in')), false) ?>>
                                     <?php esc_html_e('Tab', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
-                                <option value="footer" <?= selected('footer', esc_html(settings('review_show_in')), false) ?>>
+                                <option value="footer" <?php echo selected('footer', esc_html(settings('review_show_in')), false) ?>>
                                     <?php esc_html_e('Footer', 'spromoter-social-reviews-for-woocommerce'); ?>
                                 </option>
                             </select>
@@ -147,7 +147,7 @@
                     </form>
 
                     <form method="POST" id="spromoterExportForm">
-                        <?= wp_nonce_field('spromoter_export_form'); ?>
+                        <?php wp_nonce_field('spromoter_export_form', '_wpnonce_spromoter_export_form'); ?>
                         <input type="hidden" name="export_reviews" value="true">
                     </form>
 
@@ -162,7 +162,7 @@
                     </div>
 
                     <form method="POST" id="spromoterSubmitPastOrderForm">
-                        <?= wp_nonce_field('spromoter_submit_past_orders_form'); ?>
+                        <?php wp_nonce_field('spromoter_submit_past_orders_form', '_wpnonce_spromoter_submit_past_orders_form'); ?>
                         <input type="hidden" name="submit_past_orders" value="true">
                     </form>
 
