@@ -1,6 +1,6 @@
 <?php
 
-namespace WovoSoft\SPromoter\Admin;
+namespace KinDigi\SPromoter\Admin;
 
 use WC_Order;
 
@@ -10,7 +10,7 @@ class Order
 
     public function __construct()
     {
-        $this->settings = settings();
+        $this->settings = spromoter_settings();
     }
 
     /**

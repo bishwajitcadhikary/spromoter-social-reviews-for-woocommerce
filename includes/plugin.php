@@ -1,8 +1,6 @@
 <?php
 
-namespace WovoSoft\SPromoter;
-
-defined('ABSPATH') || exit;
+namespace KinDigi\SPromoter;
 
 /**
  * Main Plugin Class.
@@ -189,7 +187,6 @@ final class Plugin
         include_once 'admin/api.php';
 
         if (is_admin()) {
-            include_once 'admin/export.php';
             include_once 'admin/order.php';
             include_once 'admin/setting.php';
         } else {

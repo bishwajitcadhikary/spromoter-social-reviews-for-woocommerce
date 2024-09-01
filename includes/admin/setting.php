@@ -1,6 +1,6 @@
 <?php
 
-namespace WovoSoft\SPromoter\Admin;
+namespace KinDigi\SPromoter\Admin;
 
 class Setting
 {
@@ -8,7 +8,7 @@ class Setting
 
     public function __construct()
     {
-        $this->settings = settings();
+        $this->settings = spromoter_settings();
         add_action('admin_menu', [$this, 'add_admin_menus']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
         add_action('woocommerce_order_status_changed', [$this, 'submit_order']);
@@ -22,9 +22,9 @@ class Setting
      */
     public function add_admin_menus()
     {
-        $icon_url = constant('SP_PLUGIN_URL'). '/assets/images/small-logo.jpg';
+        $icon_url = constant('SP_PLUGIN_URL') . '/assets/images/small-logo.jpg';
 
-            add_menu_page('SPromoter', 'SPromoter', 'manage_options', 'spromoter', [$this, 'show_page'], $icon_url);
+        add_menu_page('SPromoter', 'SPromoter', 'manage_options', 'spromoter', [$this, 'show_page'], $icon_url);
     }
 
     /**
@@ -36,35 +36,38 @@ class Setting
     public function show_page()
     {
         if (empty($this->settings['app_id']) && empty($this->settings['api_key']) && isset($_GET['view']) && $_GET['view'] == 'login') {
-            if (!empty($_POST) && isset($_POST['_wpnonce_spromoter_login_form']) && $this->login()) {
-                wp_redirect(admin_url('admin.php?page=spromoter&view=login'));
-                exit;
+            if (!empty($_POST) && isset($_POST['_wpnonce_spromoter_login_form'])) {
+                // Verify nonce before processing form data
+                if (check_admin_referer('spromoter_login_form', '_wpnonce_spromoter_login_form')) {
+                    if ($this->login()) {
+                        wp_redirect(admin_url('admin.php?page=spromoter&view=login'));
+                        exit;
+                    }
+                }
             }
 
             require_once constant('SP_PLUGIN_DIR') . '/includes/views/login.php';
 
         } else if (empty($this->settings['app_id']) && empty($this->settings['api_key']) && (isset($_GET['view']) && $_GET['view'] == 'register')) {
-            if (!empty($_POST) && $this->register()) {
-                wp_redirect(admin_url('admin.php?page=spromoter'));
-                exit;
+            if (!empty($_POST) && check_admin_referer('spromoter_register_form', '_wpnonce_spromoter_register_form')) {
+                if ($this->register()) {
+                    wp_redirect(admin_url('admin.php?page=spromoter'));
+                    exit;
+                }
             }
 
             require_once constant('SP_PLUGIN_DIR') . '/includes/views/register.php';
-        }else if (!empty($this->settings['app_id']) && !empty($this->settings['api_key'])){
-            if (!empty($_POST) && isset($_POST['export_reviews']) && $_POST['export_reviews'] ) {
-                $this->export();
+        } else if (!empty($this->settings['app_id']) && !empty($this->settings['api_key'])) {
+            if (!empty($_POST) && isset($_POST['submit_past_orders']) && check_admin_referer('submit_past_orders', '_wpnonce_submit_past_orders')) {
+                $this->submit_past_orders();
             }
 
-            if (!empty($_POST) && isset($_POST['submit_past_orders']) && $_POST['submit_past_orders']) {
-               $this->submit_past_orders();
-            }
-
-            if (!empty($_POST) && isset($_POST['type']) && $_POST['type'] == 'update'){
-                $this->update_settings();
+            if (!empty($_POST) && spromoter_post_unslash('type') == 'update' && check_admin_referer('update_settings', '_wpnonce_update_settings')) {
+                $this->update_spromoter_settings();
             }
 
             require_once constant('SP_PLUGIN_DIR') . '/includes/views/home.php';
-        }else{
+        } else {
             wp_redirect(admin_url('admin.php?page=spromoter&view=login'));
             exit;
         }
@@ -78,44 +81,50 @@ class Setting
      */
     private function login(): bool
     {
-        if (!wp_verify_nonce($_POST['_wpnonce_spromoter_login_form'], 'spromoter_login')) {
+        // Verify the nonce for security
+        if (!wp_verify_nonce(spromoter_post_unslash( '_wpnonce_spromoter_login_form'), 'spromoter_login')) {
+            add_settings_error('nonce', 'nonce_error', 'Nonce verification failed. Please try again.');
             return false;
         }
 
-        if (empty($_POST['app_id'])) {
-            add_settings_error('app_id', 'app_id', 'APP ID is required');
-        }
+        // Sanitize the input fields
+        $app_id = sanitize_text_field(spromoter_post_unslash( 'app_id'));
+        $api_key = sanitize_text_field(spromoter_post_unslash( 'api_key'));
 
-        if (empty($_POST['api_key'])) {
-            add_settings_error('api_key', 'api_key', 'API Key is required');
-        }
-
-        if (empty($_POST['app_id']) || empty($_POST['api_key'])) {
+        // Check for empty fields and add error messages accordingly
+        if (empty($app_id) || empty($api_key)) {
+            add_settings_error('credentials', 'credentials_error', 'APP ID and API Key are required.');
             return false;
         }
 
         // Verify credentials with SPromoter
-        $api = new Api($_POST['api_key'], $_POST['app_id']);
+        $api = new Api($api_key, $app_id);
         $result = $api->send_request('stores/me');
 
-        if (isset($result) && $result['status'] == 'success'){
-            $this->settings['app_id'] = $_POST['app_id'];
-            $this->settings['api_key'] = $_POST['api_key'];
+        if (isset($result) && $result['status'] === 'success') {
+            // Save the valid credentials in the settings
+            $this->settings['app_id'] = $app_id;
+            $this->settings['api_key'] = $api_key;
             update_option('spromoter_settings', $this->settings);
 
             return true;
-        }elseif (isset($result) && $result['status'] !== 'success'){
-            if ($result['message'] == 'Unauthenticated'){
-                add_settings_error('api_key', 'api_key', 'Please enter valid api key');
+        } elseif (isset($result) && $result['status'] === 'error') {
+            // Handle specific error messages
+            if ($result['message'] === 'Unauthenticated') {
+                add_settings_error('api_key', 'api_key_error', 'Please enter a valid API key.');
+            } else {
+                add_settings_error('api_key', 'api_key_error', $result['message'] ?? 'An unknown error occurred. Please try again.');
             }
 
+            // Handle any other errors returned by the API
             foreach ($result['errors'] ?? [] as $key => $message) {
                 add_settings_error($key, $key, $message);
             }
 
             return false;
-        }else{
-            add_settings_error('api_key', 'api_key', 'Please enter valid api key');
+        } else {
+            // General error handling if the API response is unexpected
+            add_settings_error('api_key', 'api_key_error', 'Please enter a valid API key.');
             return false;
         }
     }
@@ -128,16 +137,16 @@ class Setting
      */
     private function register(): bool
     {
-        wp_verify_nonce($_POST['_wpnonce'], '_wpnonce_spromoter_login_form');
+        wp_verify_nonce(spromoter_post_unslash( '_wpnonce'), '_wpnonce_spromoter_login_form');
         $fields = ['first_name', 'last_name', 'email', 'password', 'password_confirmation'];
         foreach ($fields as $field) {
-            if (empty($_POST[$field])) {
+            if (empty(spromoter_post_unslash($field))) {
                 add_settings_error($field, $field, ucfirst(str_replace('_', ' ', $field)) . ' is required');
             }
         }
 
         // If any field is empty, return false
-        if (empty($_POST['first_name']) || empty($_POST['last_name']) || empty($_POST['email']) || empty($_POST['password']) || empty($_POST['password_confirmation'])) {
+        if (empty(spromoter_post_unslash('first_name')) || empty(spromoter_post_unslash('last_name')) || empty(spromoter_post_unslash('email')) || empty(spromoter_post_unslash('password')) || empty(spromoter_post_unslash('password_confirmation'))) {
             return false;
         }
 
@@ -149,7 +158,7 @@ class Setting
             'store_logo' => '',
         ];
         foreach ($fields as $field) {
-            $data[$field] = $_POST[$field];
+            $data[$field] = spromoter_post_unslash($field);
         }
 
         $result = $api->send_request('auth/register', 'POST', $data);
@@ -160,7 +169,7 @@ class Setting
             }
 
             return false;
-        }else{
+        } else {
             $this->settings['app_id'] = $result['data']['app_id'];
             $this->settings['api_key'] = $result['data']['api_key'];
             update_option('spromoter_settings', $this->settings);
@@ -175,9 +184,9 @@ class Setting
      * @return void
      * @since 1.0.0
      */
-    private function update_settings(): void
+    private function update_spromoter_settings(): void
     {
-        wp_verify_nonce($_POST['_wpnonce'], 'spromoter_settings_form');
+        wp_verify_nonce(spromoter_post_unslash( '_wpnonce'), 'spromoter_settings_form');
         $fields = ['app_id', 'api_key', 'order_status', 'review_show_in', 'disable_native_review_system', 'show_bottom_line_widget'];
 
         foreach ($fields as $field) {
@@ -186,53 +195,31 @@ class Setting
             }
         }
 
-        if (empty($_POST['app_id']) || empty($_POST['api_key'] || empty($_POST['order_status']) || empty($_POST['review_show_in']) || empty($_POST['disable_native_review_system']) || empty($_POST['show_bottom_line_widget']))) {
+        if (empty(spromoter_post_unslash('app_id')) || empty(spromoter_post_unslash( 'api_key') || empty(spromoter_post_unslash('order_status')) || empty(spromoter_post_unslash('review_show_in')) || empty(spromoter_post_unslash('disable_native_review_system')) || empty(spromoter_post_unslash('show_bottom_line_widget')))) {
             return;
         }
 
-        if (!in_array($_POST['order_status'], ['completed', 'processing', 'on-hold', 'canceled', 'refunded', 'failed'])) {
+        if (!in_array(spromoter_post_unslash('order_status'), ['completed', 'processing', 'on-hold', 'canceled', 'refunded', 'failed'])) {
             add_settings_error('order_status', 'order_status', 'Order status is invalid');
         }
 
-        if (!in_array($_POST['review_show_in'], ['tab', 'footer'])) {
+        if (!in_array(spromoter_post_unslash('review_show_in'), ['tab', 'footer'])) {
             add_settings_error('review_show_in', 'review_show_in', 'Review show in is invalid');
         }
 
         $settings = array_merge($this->settings, [
-            'app_id' => $_POST['app_id'],
-            'api_key' => $_POST['api_key'],
-            'order_status' => $_POST['order_status'],
-            'review_show_in' => $_POST['review_show_in'],
-            'disable_native_review_system' => $_POST['disable_native_review_system'],
-            'show_bottom_line_widget' => $_POST['show_bottom_line_widget'],
+            'app_id' => spromoter_post_unslash('app_id'),
+            'api_key' => spromoter_post_unslash('api_key'),
+            'order_status' => spromoter_post_unslash('order_status'),
+            'review_show_in' => spromoter_post_unslash('review_show_in'),
+            'disable_native_review_system' => spromoter_post_unslash('disable_native_review_system'),
+            'show_bottom_line_widget' => spromoter_post_unslash('show_bottom_line_widget'),
         ]);
 
         update_option('spromoter_settings', $settings);
 
         add_settings_error('spromoter_messages', 'spromoter_messages', 'Settings updated successfully.', 'updated');
 
-    }
-
-    /**
-     * Export reviews
-     *
-     * @return void
-     * @since 1.0.0
-     */
-    private function export()
-    {
-        wp_verify_nonce($_POST['_wpnonce_spromoter_export_form'], 'spromoter_export_form');
-
-        $exporter = new Export();
-
-        list($file_name, $error) = $exporter->export_reviews();
-
-        if (is_null($error)){
-            $exporter->download_reviews($file_name);
-            exit();
-        } else {
-            add_settings_error('spromoter_messages', 'export_reviews', $error);
-        }
     }
 
     /**
@@ -258,7 +245,7 @@ class Setting
 
         if (isset($result['status']) && $result['status'] == 'success') {
             add_settings_error('spromoter_messages', 'submit_order', 'Order is submitted successfully.', 'updated');
-        }else{
+        } else {
             add_settings_error('spromoter_messages', 'submit_order', $result['message']);
         }
     }
@@ -283,7 +270,7 @@ class Setting
 
         if (!$result['status']) {
             add_settings_error('spromoter_messages', 'submit_past_orders', $result['message']);
-        }else{
+        } else {
             add_settings_error('spromoter_messages', 'submit_past_orders', 'Past orders is submitted successfully.', 'updated');
         }
     }

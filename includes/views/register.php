@@ -1,6 +1,3 @@
-<?php
-defined('ABSPATH') || exit;
-?>
 <div class="spromoter-container">
     <div class="spromoter-wrapper">
         <div class="spromoter-inner">
@@ -8,7 +5,7 @@ defined('ABSPATH') || exit;
                 <div class="card-body">
                     <!-- Logo -->
                     <a href="https://reviews.spromoter.com" class="spromoter-brand" target="_blank" rel="noopener">
-                        <img src="<?php echo esc_url(assets_path('images/logo.png')); ?>" alt="SPromoter">
+                        <img src="<?php echo esc_url(spromoter_assets_path('images/logo.png')); ?>" alt="SPromoter">
                     </a>
                     <h2 class="mb-2">Get started with SPromoter</h2>
                     <p class="mb-4">Make your review management easy!</p>

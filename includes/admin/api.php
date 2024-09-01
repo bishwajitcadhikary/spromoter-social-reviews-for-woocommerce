@@ -2,7 +2,7 @@
 /**
  * Admin Settings
  */
-namespace WovoSoft\SPromoter\Admin;
+namespace KinDigi\SPromoter\Admin;
 
 class Api
 {

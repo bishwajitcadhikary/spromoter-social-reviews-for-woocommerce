@@ -1,5 +1,5 @@
 <?php
-namespace WovoSoft\SPromoter\Frontend;
+namespace KinDigi\SPromoter\Frontend;
 
 class Widget
 {
@@ -26,7 +26,7 @@ class Widget
 
     public function __construct()
     {
-        $this->settings = settings();
+        $this->settings = spromoter_settings();
         add_action('template_redirect', [$this, 'register_widgets']);
 
         add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
@@ -132,7 +132,7 @@ class Widget
     {
         global $product;
 
-        $product_data = get_product_data($product);
+        $product_data = spromoter_product_data($product);
 
         echo "<div 
 			class='spromoter-container' id='spromoterReviewContainer'
@@ -173,7 +173,7 @@ class Widget
     {
         global $product;
         if ( $product->get_reviews_allowed() ) {
-            $product_data = get_product_data($product);
+            $product_data = spromoter_product_data($product);
 
             echo "<div class='spromoter-product-review-box' 
 			data-product-id='".esc_html($product_data['id'])."'
@@ -190,8 +190,13 @@ class Widget
      */
     public function enqueue_scripts()
     {
+        wp_enqueue_style('spromoter', constant('SP_PLUGIN_URL') . '/assets/css/filepond.min.css', [], constant('SP_PLUGIN_VERSION'));
         wp_enqueue_style('spromoter', constant('SP_PLUGIN_URL') . '/assets/css/spromoter.css', [], constant('SP_PLUGIN_VERSION'));
-        wp_enqueue_script('spromoter', constant('SP_PLUGIN_URL') . '/assets/js/spromoter.js', [], constant('SP_PLUGIN_VERSION'), true);
+
+        wp_enqueue_script('spromoter', constant('SP_PLUGIN_URL') . '/assets/js/lightbox.min.js', [], constant('SP_PLUGIN_VERSION'), true);
+        wp_enqueue_script('spromoter', constant('SP_PLUGIN_URL') . '/assets/js/filepond.min.js', [], constant('SP_PLUGIN_VERSION'), true);
+        wp_enqueue_script('spromoter', constant('SP_PLUGIN_URL') . '/assets/js/filepond-plugin-file-validate-size.min.js', [], constant('SP_PLUGIN_VERSION'), true);
+        wp_enqueue_script('spromoter', constant('SP_PLUGIN_URL') . '/assets/js/filepond-plugin-file-validate-type.min.js', [], constant('SP_PLUGIN_VERSION'), true);
 
         wp_localize_script('spromoter', 'spromoter_settings', array(
             'app_id' => $this->settings['app_id'],

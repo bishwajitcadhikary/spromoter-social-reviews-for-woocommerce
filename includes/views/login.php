@@ -1,6 +1,3 @@
-<?php
-defined('ABSPATH') || exit;
-?>
 <div class="spromoter-container">
     <div class="spromoter-wrapper">
         <div class="spromoter-inner">
@@ -8,13 +5,13 @@ defined('ABSPATH') || exit;
                 <div class="card-body">
                     <!-- Logo -->
                     <a href="https://reviews.spromoter.com" class="spromoter-brand" target="_blank" rel="noopener">
-                        <img src="<?php echo esc_url(assets_path('images/logo.png')); ?>" alt="SPromoter">
+                        <img src="<?php echo esc_url(spromoter_assets_path('images/logo.png')); ?>" alt="SPromoter">
                     </a>
                     <h2 class="mb-2">Get started with SPromoter</h2>
                     <p class="mb-4">Make your review management easy!</p>
 
                     <form id="spromoterLoginForm" method="POST">
-                        <?php wp_nonce_field( 'spromoter_login' , '_wpnonce_spromoter_login_form'); ?>
+                        <?php wp_nonce_field('spromoter_login', '_wpnonce_spromoter_login_form'); ?>
                         <div class="mb-3">
                             <label for="app_id" class="spromoter-form-label mb-2">App ID</label>
                             <input
@@ -24,7 +21,7 @@ defined('ABSPATH') || exit;
                                     name="app_id"
                                     placeholder="Enter your app id"
                                     autofocus
-                                    value="<?php echo esc_attr($_POST['app_id'] ?? ''); ?>"
+                                    value="<?php echo esc_attr(spromoter_post_unslash('app_id')) ?>"
                                     required
                                     minlength="36"
                             />
@@ -39,7 +36,7 @@ defined('ABSPATH') || exit;
                                     id="api_key"
                                     name="api_key"
                                     placeholder="Enter your api key"
-                                    value="<?php echo esc_attr($_POST['api_key'] ?? ''); ?>"
+                                    value="<?php echo esc_attr(spromoter_post_unslash('api_key')); ?>"
                                     required
                             />
 
