@@ -11,7 +11,7 @@
  * Plugin Name:       SPromoter Social Reviews for WooCommerce
  * Plugin URI:        https://reviews.spromoter.com/integrations/woocommerce
  * Description:       SPromoter Social Reviews for WooCommerce helps you to collect and display reviews from your customers on your WooCommerce store.
- * Version:           1.0.9
+ * Version:           1.0.10
  * Requires at least: 5.3
  * Requires PHP:      7.4
  * Author:            SPromoter
@@ -24,8 +24,8 @@
 
 defined('ABSPATH') || exit;
 
-if (!defined('SP_PLUGIN_FILE')) {
-    define('SP_PLUGIN_FILE', __FILE__);
+if (!defined('SPROMOTER_PLUGIN_FILE')) {
+    define('SPROMOTER_PLUGIN_FILE', __FILE__);
 }
 
 require_once plugin_dir_path(__FILE__) . 'includes/plugin.php';

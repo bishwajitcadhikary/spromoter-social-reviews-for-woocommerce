@@ -188,22 +188,23 @@ class Widget
      * @return void
      * @since 1.0.0
      */
-    public function enqueue_scripts()
-    {
-        wp_enqueue_style('spromoter', constant('SP_PLUGIN_URL') . '/assets/css/filepond.min.css', [], constant('SP_PLUGIN_VERSION'));
-        wp_enqueue_style('spromoter', constant('SP_PLUGIN_URL') . '/assets/css/spromoter.css', [], constant('SP_PLUGIN_VERSION'));
+	public function enqueue_scripts()
+	{
+		wp_enqueue_style('spromoter-filepond', constant('SPROMOTER_PLUGIN_URL') . '/assets/css/filepond.min.css', [], constant('SPROMOTER_PLUGIN_VERSION'));
+		wp_enqueue_style('spromoter-main', constant('SPROMOTER_PLUGIN_URL') . '/assets/css/spromoter.css', [], constant('SPROMOTER_PLUGIN_VERSION'));
 
-        wp_enqueue_script('spromoter', constant('SP_PLUGIN_URL') . '/assets/js/lightbox.min.js', [], constant('SP_PLUGIN_VERSION'), true);
-        wp_enqueue_script('spromoter', constant('SP_PLUGIN_URL') . '/assets/js/filepond.min.js', [], constant('SP_PLUGIN_VERSION'), true);
-        wp_enqueue_script('spromoter', constant('SP_PLUGIN_URL') . '/assets/js/filepond-plugin-file-validate-size.min.js', [], constant('SP_PLUGIN_VERSION'), true);
-        wp_enqueue_script('spromoter', constant('SP_PLUGIN_URL') . '/assets/js/filepond-plugin-file-validate-type.min.js', [], constant('SP_PLUGIN_VERSION'), true);
+		wp_enqueue_script('spromoter-lightbox', constant('SPROMOTER_PLUGIN_URL') . '/assets/js/lightbox.min.js', [], constant('SPROMOTER_PLUGIN_VERSION'), true);
+		wp_enqueue_script('spromoter-filepond', constant('SPROMOTER_PLUGIN_URL') . '/assets/js/filepond.min.js', [], constant('SPROMOTER_PLUGIN_VERSION'), true);
+		wp_enqueue_script('spromoter-filepond-validate-size', constant('SPROMOTER_PLUGIN_URL') . '/assets/js/filepond-plugin-file-validate-size.min.js', [], constant('SPROMOTER_PLUGIN_VERSION'), true);
+		wp_enqueue_script('spromoter-filepond-validate-type', constant('SPROMOTER_PLUGIN_URL') . '/assets/js/filepond-plugin-file-validate-type.min.js', [], constant('SPROMOTER_PLUGIN_VERSION'), true);
+		wp_enqueue_script('spromoter-main', constant('SPROMOTER_PLUGIN_URL') . '/assets/js/spromoter.js', ['jquery'], constant('SPROMOTER_PLUGIN_VERSION'), true);
 
-        wp_localize_script('spromoter', 'spromoter_settings', array(
-            'app_id' => $this->settings['app_id'],
-            'bottom_line' => $this->settings['show_bottom_line_widget'],
-            'api_url' => constant('SP_API_URL'),
-        ));
-    }
+		wp_localize_script('spromoter-main', 'spromoter_settings', array(
+			'app_id' => $this->settings['app_id'],
+			'bottom_line' => $this->settings['show_bottom_line_widget'],
+			'api_url' => constant('SPROMOTER_API_URL'),
+		));
+	}
 }
 
 Widget::instance();

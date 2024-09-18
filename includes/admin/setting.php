@@ -22,7 +22,7 @@ class Setting
      */
     public function add_admin_menus()
     {
-        $icon_url = constant('SP_PLUGIN_URL') . '/assets/images/small-logo.jpg';
+        $icon_url = constant('SPROMOTER_PLUGIN_URL') . '/assets/images/small-logo.jpg';
 
         add_menu_page('SPromoter', 'SPromoter', 'manage_options', 'spromoter', [$this, 'show_page'], $icon_url);
     }
@@ -38,7 +38,7 @@ class Setting
         if (empty($this->settings['app_id']) && empty($this->settings['api_key']) && isset($_GET['view']) && $_GET['view'] == 'login') {
             if (!empty($_POST) && isset($_POST['_wpnonce_spromoter_login_form'])) {
                 // Verify nonce before processing form data
-                if (check_admin_referer('spromoter_login_form', '_wpnonce_spromoter_login_form')) {
+                if (check_admin_referer()) {
                     if ($this->login()) {
                         wp_redirect(admin_url('admin.php?page=spromoter&view=login'));
                         exit;
@@ -46,27 +46,27 @@ class Setting
                 }
             }
 
-            require_once constant('SP_PLUGIN_DIR') . '/includes/views/login.php';
+            require_once constant('SPROMOTER_PLUGIN_DIR') . '/includes/views/login.php';
 
         } else if (empty($this->settings['app_id']) && empty($this->settings['api_key']) && (isset($_GET['view']) && $_GET['view'] == 'register')) {
-            if (!empty($_POST) && check_admin_referer('spromoter_register_form', '_wpnonce_spromoter_register_form')) {
+            if (!empty($_POST) && check_admin_referer()) {
                 if ($this->register()) {
                     wp_redirect(admin_url('admin.php?page=spromoter'));
                     exit;
                 }
             }
 
-            require_once constant('SP_PLUGIN_DIR') . '/includes/views/register.php';
+            require_once constant('SPROMOTER_PLUGIN_DIR') . '/includes/views/register.php';
         } else if (!empty($this->settings['app_id']) && !empty($this->settings['api_key'])) {
-            if (!empty($_POST) && isset($_POST['submit_past_orders']) && check_admin_referer('submit_past_orders', '_wpnonce_submit_past_orders')) {
+            if (!empty($_POST) && isset($_POST['submit_past_orders']) && check_admin_referer()) {
                 $this->submit_past_orders();
             }
 
-            if (!empty($_POST) && spromoter_post_unslash('type') == 'update' && check_admin_referer('update_settings', '_wpnonce_update_settings')) {
+            if (!empty($_POST) && spromoter_post_unslash('type') == 'update' && check_admin_referer()) {
                 $this->update_spromoter_settings();
             }
 
-            require_once constant('SP_PLUGIN_DIR') . '/includes/views/home.php';
+            require_once constant('SPROMOTER_PLUGIN_DIR') . '/includes/views/home.php';
         } else {
             wp_redirect(admin_url('admin.php?page=spromoter&view=login'));
             exit;
@@ -283,7 +283,7 @@ class Setting
      */
     public function enqueue_scripts()
     {
-        wp_enqueue_style('spromoter', constant('SP_PLUGIN_URL') . '/assets/css/spromoter.css', [], constant('SP_PLUGIN_VERSION'));
+        wp_enqueue_style('spromoter', constant('SPROMOTER_PLUGIN_URL') . '/assets/css/spromoter.css', [], constant('SPROMOTER_PLUGIN_VERSION'));
     }
 }
 

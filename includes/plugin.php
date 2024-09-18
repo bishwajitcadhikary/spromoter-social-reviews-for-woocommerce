@@ -38,7 +38,7 @@ final class Plugin
      */
     public function __clone()
     {
-        _doing_it_wrong(__FUNCTION__, esc_html__('Foul!', 'spromoter-social-reviews-for-woocommerce'), esc_html(constant('SP_PLUGIN_VERSION')));
+        _doing_it_wrong(__FUNCTION__, esc_html__('Foul!', 'spromoter-social-reviews-for-woocommerce'), esc_html(constant('SPROMOTER_PLUGIN_VERSION')));
     }
 
     /**
@@ -48,7 +48,7 @@ final class Plugin
      */
     public function __wakeup()
     {
-        _doing_it_wrong(__FUNCTION__, esc_html__('Foul!', 'spromoter-social-reviews-for-woocommerce'), esc_html(constant('SP_PLUGIN_VERSION')));
+        _doing_it_wrong(__FUNCTION__, esc_html__('Foul!', 'spromoter-social-reviews-for-woocommerce'), esc_html(constant('SPROMOTER_PLUGIN_VERSION')));
     }
 
     /**
@@ -71,13 +71,13 @@ final class Plugin
      */
     private function define_constants(): void
     {
-        $this->define('SP_DEBUG', $this->is_dev_mode());
-        $this->define('SP_PLUGIN_DIR', $this->plugin_path());
-        $this->define('SP_PLUGIN_URL', $this->plugin_url());
-        $this->define('SP_PLUGIN_BASENAME', $this->plugin_basename());
-        $this->define('SP_PLUGIN_VERSION', $this->plugin_version());
-        $this->define('SP_PLUGIN_TEXT_DOMAIN', $this->plugin_text_domain());
-        $this->define('SP_API_URL', $this->api_url());
+        $this->define('SPROMOTER_DEBUG', $this->is_dev_mode());
+        $this->define('SPROMOTER_PLUGIN_DIR', $this->plugin_path());
+        $this->define('SPROMOTER_PLUGIN_URL', $this->plugin_url());
+        $this->define('SPROMOTER_PLUGIN_BASENAME', $this->plugin_basename());
+        $this->define('SPROMOTER_PLUGIN_VERSION', $this->plugin_version());
+        $this->define('SPROMOTER_PLUGIN_TEXT_DOMAIN', $this->plugin_text_domain());
+        $this->define('SPROMOTER_API_URL', $this->api_url());
     }
 
     /**
@@ -88,7 +88,7 @@ final class Plugin
      */
     public function is_dev_mode(): bool
     {
-        return defined('SP_DEBUG') && constant('SP_DEBUG');
+        return defined('SPROMOTER_DEBUG') && constant('SPROMOTER_DEBUG');
     }
 
     /**
@@ -122,7 +122,7 @@ final class Plugin
      */
     public function plugin_basename(): string
     {
-        return dirname(constant('SP_PLUGIN_FILE'), 2) . '/spromoter.php';
+        return dirname(constant('SPROMOTER_PLUGIN_FILE'), 2) . '/spromoter.php';
     }
 
     /**
@@ -133,7 +133,7 @@ final class Plugin
      */
     public function plugin_version(): string
     {
-        $plugin_data = get_file_data(SP_PLUGIN_FILE, array('Version' => 'Version'));
+        $plugin_data = get_file_data(SPROMOTER_PLUGIN_FILE, array('Version' => 'Version'));
         return $plugin_data['Version'];
     }
 
@@ -145,7 +145,7 @@ final class Plugin
      */
     private function plugin_text_domain(): string
     {
-        $plugin_data = get_file_data(SP_PLUGIN_FILE, array('Text Domain' => 'Text Domain'));
+        $plugin_data = get_file_data(SPROMOTER_PLUGIN_FILE, array('Text Domain' => 'Text Domain'));
         return $plugin_data['Text Domain'];
     }
 
@@ -157,7 +157,7 @@ final class Plugin
      */
     private function api_url(): string
     {
-        return $this->is_dev_mode() ? 'https://api.spromoter.test/v1/' : 'https://api.spromoter.com/v1/';
+        return $this->is_dev_mode() ? 'https://spromoter.test/api/v1/' : 'https://reviews.spromoter.com/api/v1/';
     }
 
     /**
@@ -206,7 +206,7 @@ final class Plugin
 
         add_filter('plugin_row_meta', [$this, 'plugin_meta_links'], 10, 2);
 
-        register_deactivation_hook(SP_PLUGIN_FILE, [$this, 'deactivate']);
+        register_deactivation_hook(SPROMOTER_PLUGIN_FILE, [$this, 'deactivate']);
     }
 
     /**
@@ -230,7 +230,7 @@ final class Plugin
      */
     public function plugin_meta_links($links, $file)
     {
-        if ($file == plugin_basename(SP_PLUGIN_FILE)) {
+        if ($file == plugin_basename(SPROMOTER_PLUGIN_FILE)) {
             $links = array_merge($links, [
                 '<a href="' . admin_url('admin.php?page=spromoter') . '">' . __('Settings', 'spromoter-social-reviews-for-woocommerce') . '</a>',
             ]);

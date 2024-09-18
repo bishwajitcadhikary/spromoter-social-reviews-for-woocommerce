@@ -27,7 +27,7 @@ class Api
 
     public function __construct($api_key = null, $app_id = null)
     {
-        $this->api_url = constant('SP_API_URL');
+        $this->api_url = constant('SPROMOTER_API_URL');
         $this->api_key = $api_key;
         $this->app_id = $app_id;
     }
@@ -51,7 +51,7 @@ class Api
                 'Accept' => 'application/json',
                 'X-App-ID' => $this->app_id,
             ], $headers),
-            'sslverify' => !constant('SP_DEBUG'),
+            'sslverify' => !constant('SPROMOTER_DEBUG'),
         ];
 
         // Add query parameters for GET requests

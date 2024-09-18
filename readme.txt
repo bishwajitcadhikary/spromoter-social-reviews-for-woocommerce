@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/bishwajitca
 Tags: woocommerce, reviews, social reviews, spromoter
 Requires at least: 5.3
 Tested up to: 6.6
-Stable tag: 1.0.9
+Stable tag: 1.0.10
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html

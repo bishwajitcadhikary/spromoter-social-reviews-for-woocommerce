@@ -47,7 +47,7 @@ class Order
             $items[] = array(
                 'id' => "$productId",
                 'name' => $product->get_name(),
-                'image' => get_product_image_url($product->get_id()),
+                'image' => spromoter_get_product_image_url($product->get_id()),
                 'url' => $product->get_permalink(),
                 'description' => wp_strip_all_tags($product->get_description()),
                 'lang' => get_locale(),
@@ -123,7 +123,7 @@ class Order
             $items[] = [
                 'id' => "$productId",
                 'name' => $product->get_name(),
-                'image' => get_product_image_url($product->get_id()),
+                'image' => spromoter_get_product_image_url($product->get_id()),
                 'url' => $product->get_permalink(),
                 'description' => wp_strip_all_tags($product->get_description()),
                 'lang' => get_locale(),

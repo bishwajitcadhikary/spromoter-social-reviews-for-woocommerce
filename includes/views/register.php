@@ -1,3 +1,9 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
+?>
+
 <div class="spromoter-container">
     <div class="spromoter-wrapper">
         <div class="spromoter-inner">
@@ -5,13 +11,13 @@
                 <div class="card-body">
                     <!-- Logo -->
                     <a href="https://reviews.spromoter.com" class="spromoter-brand" target="_blank" rel="noopener">
-                        <img src="<?php echo esc_url(spromoter_assets_path('images/logo.png')); ?>" alt="SPromoter">
+                        <img src="<?php echo esc_url( spromoter_assets_path( 'images/logo.png' ) ); ?>" alt="SPromoter">
                     </a>
                     <h2 class="mb-2">Get started with SPromoter</h2>
                     <p class="mb-4">Make your review management easy!</p>
 
                     <form id="spromoterRegisterForm" method="POST">
-                        <?php wp_nonce_field( 'spromoter_register' , '_wpnonce_spromoter_register_form'); ?>
+						<?php wp_nonce_field(); ?>
 
                         <div class="mb-3">
                             <label for="first_name" class="spromoter-form-label mb-2">First Name</label>
@@ -83,7 +89,8 @@
 
                     <p class="text-center">
                         <span>Already have an account?</span>
-                        <a class="spromoter-button-link" href="<?php echo esc_url(admin_url('admin.php?page=spromoter&view=login')); ?>">
+                        <a class="spromoter-button-link"
+                           href="<?php echo esc_url( admin_url( 'admin.php?page=spromoter&view=login' ) ); ?>">
                             Configure Here
                         </a>
                     </p>

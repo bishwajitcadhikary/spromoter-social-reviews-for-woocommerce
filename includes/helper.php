@@ -13,7 +13,7 @@ if (!function_exists('spromoter_assets_path')) {
             $path = substr($path, 1);
         }
 
-        return constant('SP_PLUGIN_URL') . '/assets' . ($path ? '/' . $path : '');
+        return constant('SPROMOTER_PLUGIN_URL') . '/assets' . ($path ? '/' . $path : '');
     }
 }
 
@@ -56,8 +56,8 @@ if (!function_exists('spromoter_settings')){
  * @param int $product_id
  * @return string|false
  */
-if (!function_exists('get_product_image_url')) {
-    function get_product_image_url(int $product_id): false|string
+if (!function_exists( 'spromoter_get_product_image_url' )) {
+    function spromoter_get_product_image_url(int $product_id)
     {
         return wp_get_attachment_url(get_post_thumbnail_id($product_id));
     }
@@ -137,18 +137,12 @@ if (!function_exists('spromoter_product_specs')){
 }
 
 if (!function_exists('spromoter_post_unslash')){
-    function spromoter_post_unslash($key, $data = null, $default = null): array|string
+    function spromoter_post_unslash($key, $default = null)
     {
-        if (is_null($data)) {
-            // Use filter_input to fetch the value from POST data
-            $data = filter_input(INPUT_POST, $key, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY | FILTER_NULL_ON_FAILURE);
+        if (isset($_POST) && check_admin_referer() && array_key_exists($key, $_POST)) {
+            return wp_strip_all_tags(wp_unslash($_POST[$key]));
+		}
 
-            // If filter_input returns null or false, fallback to the default
-            if ($data === null || $data === false) {
-                $data = $default;
-            }
-        }
-
-        return wp_unslash($data);
+		return $default;
     }
 }
