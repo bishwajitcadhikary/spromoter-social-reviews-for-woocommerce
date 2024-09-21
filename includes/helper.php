@@ -139,7 +139,7 @@ if (!function_exists('spromoter_product_specs')){
 if (!function_exists('spromoter_post_unslash')){
     function spromoter_post_unslash($key, $default = null)
     {
-        if (isset($_POST) && check_admin_referer() && array_key_exists($key, $_POST)) {
+        if (!empty($_POST) && check_admin_referer() && array_key_exists($key, $_POST)) {
             return wp_strip_all_tags(wp_unslash($_POST[$key]));
 		}
 
